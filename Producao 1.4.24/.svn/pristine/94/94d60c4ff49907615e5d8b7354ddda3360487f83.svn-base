@@ -1,0 +1,109 @@
+package br.gov.mt.sefaz.itc.util.servico.demanda;
+
+import br.com.abaco.util.Validador;
+
+import br.gov.mt.sefaz.itc.util.EntidadeVo;
+import br.gov.mt.sefaz.itc.util.ITCDServico;
+
+import java.io.IOException;
+
+import java.sql.Connection;
+
+import sefaz.mt.util.Propriedades;
+
+
+/**
+ * Classe de Serviço para atribuir o valor 
+ * da avaliacao a cada um dos beneficiários
+ * 
+ * @author Dherkyan Ribeiro
+ * @implemented by Dherkyan Ribeiro
+ */
+public class PreencherValorBeneficiarioAvaliacao extends ITCDServico
+{
+	/**
+	 * Método Primário
+	 * @param args
+	 * @implemented by Dherkyan Ribeiro
+	 */
+	public static void main(String[] args) throws IOException
+	{
+		String nomeAtividade = "/servicos"; //Este é o diretório padrão quando é um serviço, mas pode variar a pedido da SEFAZ.
+		String nomeSistema = "/itc"; //Este é o nome do seu sistema.
+		String nomeSaida = "/out"; //Este é o diretório padrão de saída de um serviço, mas pode variar a pedido da SEFAZ.
+		String nomeArquivoLOG = "/ValorBeneficiarioAvaliacao.log"; //Este é o nome do seu arquivo que será gravado o LOG.
+		String nomeArquivoProperties = "ITCDS.properties"; //Este arquivo será criado e empacotado pela SEFAZ.
+		Connection conexao = null;
+		//Aqui você declara a sua sub classe de AbstractBe. Segue exemplo:
+		PreencherValorBeneficiarioAvaliacaoBe valorBeneficiarioAvaliacaoBe = null;
+		String mensagem = null;
+		registrarLogExecucao(null, nomeAtividade, nomeSistema, nomeSaida, nomeArquivoLOG);
+		try
+		{
+			Propriedades.setArquivoPropriedades(nomeArquivoProperties);
+			//Aqui seria instanciado o seu Vo.
+			EntidadeVo entidadeVo = new EntidadeVo();
+		   entidadeVo.setLogSefazVo(preencheLogSefazServicoAutomatico());
+			//Setando usuário automático para ser responsável pela alteração dos documentos que serão alterados.
+			entidadeVo.setUsuarioLogado(getCodigoUsuarioAutomatico());
+			//Esta conexão criada nunca expira, ou seja, ela não tem tempo para fechar sozinha.
+			conexao = abreConexao();
+			//Aqui você instancia a sua sub classe de AbstractBe passando a conexão aberta anteriormente. Segue exemplo:
+			valorBeneficiarioAvaliacaoBe = new PreencherValorBeneficiarioAvaliacaoBe(conexao);
+			mensagem = valorBeneficiarioAvaliacaoBe.valorBeneficiarioAvaliacao(entidadeVo);
+			if(Validador.isStringValida(mensagem))
+			{
+				throw new Exception(mensagem);
+			}
+			else
+			{
+				throw new Exception(SEM_ERROS);	
+			}			
+		}
+		catch (Exception erro)
+		{
+			erro.printStackTrace();
+			registrarLogExecucao(erro, nomeAtividade, nomeSistema, nomeSaida, nomeArquivoLOG);
+		}
+		catch (Error erro)
+		{
+			erro.printStackTrace();
+			registrarLogExecucao(erro, nomeAtividade, nomeSistema, nomeSaida, nomeArquivoLOG);
+		}
+		catch (Throwable erro)
+		{
+			erro.printStackTrace();
+			registrarLogExecucao(erro, nomeAtividade, nomeSistema, nomeSaida, nomeArquivoLOG);
+		}
+		finally
+		{
+			try
+			{
+				//Aqui você fecha a sua sub classe de AbstractBe(). Segue exemplo:
+				if (Validador.isObjetoValido(valorBeneficiarioAvaliacaoBe))
+				{
+					valorBeneficiarioAvaliacaoBe.close();
+					valorBeneficiarioAvaliacaoBe = null;
+				}
+				fechaConexao(conexao);
+				conexao = null;
+			}
+			catch (Exception erro)
+			{
+				erro.printStackTrace();
+				registrarLogExecucao(erro, nomeAtividade, nomeSistema, nomeSaida, nomeArquivoLOG);
+			}
+			catch (Error erro)
+			{
+				erro.printStackTrace();
+				registrarLogExecucao(erro, nomeAtividade, nomeSistema, nomeSaida, nomeArquivoLOG);
+			}
+			catch (Throwable erro)
+			{
+				erro.printStackTrace();
+				registrarLogExecucao(erro, nomeAtividade, nomeSistema, nomeSaida, nomeArquivoLOG);
+			}
+		}
+	}
+}
+

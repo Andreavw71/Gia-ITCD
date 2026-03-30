@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252"></meta>
+    <title>testeMODABERTO</title>
+	 <script type="text/javascript" language="javascript">
+			
+			var hostLocal = 'http://localhost:8988';
+			var hostDesenvolvimento = 'https://gamba.sefaz.mt.gov.br:4443';
+			var hostHomologacao = 'http://homologa.sefaz.mt.gov.br';
+			
+			function incluirGIA(host)
+			{
+				document.form.action = host+'/itc/giaitcd/ViewMenuGIAITCDIncluir.jsp';
+				document.form.submit();
+				return true;
+			}
+			
+			function alterarGIA(host)
+			{
+				document.form.action = host+'/itc/generico/giaitcd/alterar';
+				document.form.submit();
+				return true;
+			}
+			
+			function consultarGIA(host)
+			{
+				document.form.action = host+'/itc/generico/giaitcd/pesquisar';
+				document.form.submit();
+				return true;
+			}
+			function consultarAutenticidade(host)
+			{
+				document.form.action = host+'/itc/giaitcd/autenticidade/imprimir';
+				document.form.submit();
+				return true;
+			}
+			
+			
+    </script>
+  </head>
+  <body>
+  <center>
+	<form method="POST" name="form"  action="#">
+		<h1>Teste MODABERTO - LOCAL</h1>
+		</br>
+		<input type="button" value="Incluir GIA (MODABERTO)" name="incluir"  onClick="return incluirGIA(hostLocal);"/> 
+		</br>
+		<input type="button" value="Alterar GIA (MODABERTO)" name="alterar"  onClick="return alterarGIA(hostLocal);"/> 
+		</br>
+		<input type="button" value="Consutlar GIA (MODABERTO)" name="consultar"  onClick="return consultarGIA(hostLocal);"/> 
+		</br>
+		<input type="button" value="Consultar Autenticidade (MODABERTO)" name="consultarAut"  onClick="return consultarAutenticidade(hostLocal);"/> 
+		</br>
+		<h1>Teste MODABERTO - DESENVOLVIMENTO</h1>
+		</br>
+		<input type="button" value="Incluir GIA (MODABERTO)" name="incluir"  onClick="return incluirGIA(hostDesenvolvimento);"/> 
+		</br>
+		<input type="button" value="Alterar GIA (MODABERTO)" name="alterar"  onClick="return alterarGIA(hostDesenvolvimento);"/> 
+		</br>
+		<input type="button" value="Consutlar GIA (MODABERTO)" name="consultar"  onClick="return consultarGIA(hostDesenvolvimento);"/> 
+		</br>
+		<input type="button" value="Consultar Autenticidade (MODABERTO)" name="consultarAut"  onClick="return consultarAutenticidade(hostDesenvolvimento);"/> 
+		</br>
+		<h1>Teste MODABERTO - HOMOLOGAÇÃO</h1>
+		</br>
+		<input type="button" value="Incluir GIA (MODABERTO)" name="incluir"  onClick="return incluirGIA(hostHomologacao);"/> 
+		</br>
+		<input type="button" value="Alterar GIA (MODABERTO)" name="alterar"  onClick="return alterarGIA(hostHomologacao);"/> 
+		</br>
+		<input type="button" value="Consutlar GIA (MODABERTO)" name="consultar"  onClick="return consultarGIA(hostHomologacao);"/> 
+		</br>
+		<input type="button" value="Consultar Autenticidade (MODABERTO)" name="consultarAut"  onClick="return consultarAutenticidade(hostHomologacao);"/> 
+		</br>
+	</form>
+  </center>
+  </body>
+</html>

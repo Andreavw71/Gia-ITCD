@@ -1,0 +1,121 @@
+/**
+  * Secretaria de Estado de Fazenda de Mato Grosso - Sefaz-MT
+  * Arquivo : itcd.css
+  * Criacao : Novembro de 2007
+  * Revisao : $Revision: 1.1.1.1 $
+  * Log :
+  * Autor: Leandro Dorileo
+  * $Id: itcd.css,v 1.1.1.1 2008/05/28 17:55:08 lucas.nascimento Exp $
+  */
+#abas {
+  font-size: 11px;
+  float: left;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  color: white;
+  width: 740px;
+  height: 19px;
+  border-bottom: 2px solid #336699;
+  background-color: silver;
+
+}
+
+#abas div {
+  float: left;
+  padding-left: 13px;
+  padding-right: 2px;
+  padding-top: 5px;
+  padding-bottom: 1px;
+  cursor: pointer;
+}
+
+#abas div:hover {
+  color: black;
+}
+
+#abas .aba-esq-azul {
+  background: #336699 url(/imagens/abaesqazulcinza.gif) left no-repeat;
+}
+
+#abas .aba-esq-cinza-branco {
+  background: #999999 url(/imagens/abaesqcinzafundobranco.gif) left no-repeat;
+}
+
+#abas .aba-dir-azul {
+  background: #999999 url(/imagens/abadirazulcinza.gif) left no-repeat;
+}
+
+#abas .aba-dir-cinza {
+  background: #999999 url(/imagens/abadircinzacinza.gif) left no-repeat;
+}
+
+#abas .aba-dir-cinza-fim {
+  background: url(/imagens/abadircinzabranco.gif) left no-repeat;
+  color: black;
+}
+
+#abas .aba-dir-azul-branco {
+  background: url(/imagens/abadirazulbranco.gif) left no-repeat;
+  color: black;
+}
+
+#abas .aba-esq-azul-branco {
+  background: #336699 url(/imagens/abaesqazulfundobranco.gif) left no-repeat;
+}
+
+#abas .aba-dir-branco-fim {
+	 color: black;
+}
+
+
+.popup{
+   display:none;
+   position:fixed;
+   left:0px;
+   top:0px;
+   padding:0px;
+   width:100%;
+   height:100%;
+   border:1px solid #d0d0d0;
+   overflow: hidden;
+}
+
+.pop-content-x{
+   margin-top:200px;
+   width:740px;
+   height:300px;
+   background-color: white;
+   border:1px solid #d0d0d0;
+   overflow-y: auto;
+   overflow-x: hidden;
+   box-shadow: 10px 10px 5px #888888;
+   z-index:1000;
+}
+
+.pop-transparent-x{
+	position:absolute; top:0; left:0;
+	width:100%; height:100%;
+	background-color: silver;
+	opacity: 0.6;
+   -moz-opacity:0.6;
+   filter:opacity(alpha=60);
+   -webkit-opacity:0.6;
+	z-index:10;
+}
+
+.pop-link{
+	border:1px solid #d0d0d0;
+	border-top:none;
+	background-color: white;
+	width:60px;
+	box-shadow: 5px 5px 5px #888888;
+	border-radius: 0px 0px 10px 10px;
+	color:blue;
+}
+.pop-link a:link, a:visited, a:active {
+	text-decoration: none
+}
+.pop-link:active{ 
+	background-color: #d0d0d0;
+	border-radius: 0px 0px 12px 12px;
+	border:1px solid #d0d0d3;
+}

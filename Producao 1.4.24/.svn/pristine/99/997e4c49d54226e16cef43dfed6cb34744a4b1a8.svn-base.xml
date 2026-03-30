@@ -1,0 +1,55 @@
+<?xml version = '1.0' encoding = 'ISO-8859-1'?>
+<!DOCTYPE orion-application PUBLIC "-//Evermind//DTD J2EE Application runtime 1.2//EN" "http://xmlns.oracle.com/ias/dtds/orion-application.dtd">
+<orion-application>
+  <library path="/usr/appl/lib/abaco.jar"/>
+  <library path="/usr/appl/lib/abacologdao.jar"/>
+  <library path="/usr/appl/lib/acessoweb.jar"/>
+  <library path="/usr/appl/lib/arrecadacao.jar"/>
+  <library path="/usr/appl/lib/cadastro.jar"/>
+  <library path="/usr/appl/lib/commons-codec.jar"/>
+  <library path="/usr/appl/lib/commons-httpclient.jar"/>
+  <library path="/usr/appl/lib/commons-logging.jar"/>
+  <library path="/usr/appl/lib/commons-lang.jar"/>
+  <library path="/usr/appl/lib/contacorrente.jar"/>
+  <library path="/usr/appl/lib/generico.jar"/>
+  <library path="/usr/appl/lib/gestaopessoas.jar"/>
+  <library path="/usr/appl/lib/gia.jar"/>
+  <library path="/usr/appl/lib/integracaoarrecadacao.jar"/>
+  <library path="/usr/appl/lib/integracaocadastro.jar"/>
+  <library path="/usr/appl/lib/integracaocontacorrente.jar"/>
+  <library path="/usr/appl/lib/integracaogestaopessoas.jar"/>
+  <library path="/usr/appl/lib/integracaoscl.jar"/>
+  <library path="/usr/appl/lib/ccfiscal.jar"/>
+  <library path="/usr/appl/lib/integracaoccfiscal.jar"/>
+  <library path="/usr/appl/lib/itcd.jar"/>
+  <library path="/usr/appl/lib/iText.jar"/>   
+  <library path="/usr/appl/lib/jdom.jar"/>
+  <library path="/usr/appl/lib/jstl.jar"/>
+  <library path="/usr/appl/lib/log.jar"/>
+  <library path="/usr/appl/lib/scl.jar"/>
+  <library path="/usr/appl/lib/xstream-1.3.1.jar"/>
+  <library path="/usr/appl/lib/eprocess.jar"/>
+  <library path="/usr/appl/lib/integracaoeprocess.jar"/>
+  <library path="/usr/appl/lib/integracaomef.jar"/>
+  <library path="/usr/appl/lib/mef.jar"/>
+  <library path="/usr/appl/lib/nds.jar"/>
+  <library path="/usr/appl/lib/integracaonds.jar"/>
+  <library path="/usr/appl/lib/poi-3.9.jar"/>
+  <library path="/usr/appl/lib/poi-ooxml-3.9.jar"/>	
+  <library path="/usr/appl/lib/poi-ooxml-schemas-3.9.jar"/>	  
+  <library path="/usr/appl/lib/commons-fileupload.jar"/>  
+  <library path="/usr/appl/lib/xmlbeans-2.3.0.jar"/>  
+  <library path="/usr/appl/lib/dom4j.jar"/> 
+  <library path="/usr/appl/lib/geronimo-stax-api_1.0_spec-1.0.1.jar"/>
+  <library path="/usr/appl/lib/lpm.jar"/> 
+  <library path="/usr/appl/lib/integracaolpm.jar"/>
+  <library path="/usr/appl/lib/visualizadorpdf.jar"/> 
+  <library path="/usr/appl/lib/integracaovisualizadorpdf.jar"/>  
+  <library path="/usr/appl/lib/ipva.jar"/>
+  <library path="/usr/appl/lib/integracaoipva.jar"/>
+  <library path="/usr/appl/lib/cas.jar"/>
+  <library path="/usr/appl/lib/integracaocas.jar"/>
+  <library path="/usr/appl/lib/commons-httpclient.jar"/>
+  <library path="/usr/appl/lib/sos.jar"/>
+  <library path="/usr/appl/lib/integracaosos.jar"/>
+</orion-application>

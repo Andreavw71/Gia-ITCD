@@ -1,0 +1,3 @@
+Implementation-Vendor: Ábaco Tecnologia da Informação LTDA
+Implementation-Title: ITCD - Imposto Sobre Transmissão Causa Mortis e Doação de Quaisquer Bens ou Direitos
+Implementation-Version: 1.2.206 01/07/2016 17:43:57 GMT-0400

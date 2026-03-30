@@ -11,6 +11,7 @@ import ImprimirGIAITCD from './pages/giaitcd/consulta/ImprimirGIAITCD';
 import ImprimirDAR from './pages/giaitcd/consulta/ImprimirDAR';
 import ProtocolarGIAITCD from './pages/giaitcd/protocolo/ProtocolarGIAITCD';
 import Autenticidade from './pages/autenticidade/Autenticidade';
+import GIAITCMDDoacao from './pages/giaitcmd-doacao/GIAITCMDDoacao';
 import './styles/sefaz.css';
 
 const App: React.FC = () => {
@@ -41,6 +42,10 @@ const App: React.FC = () => {
           <Route path="giaitcd/protocolo" element={<ProtocolarGIAITCD />} />
           <Route path="giaitcd/validar-processo" element={<ProtocolarGIAITCD />} />
           <Route path="giaitcd/consultar-processo" element={<ConsultarGIAITCD />} />
+
+          {/* GIA-ITCMD-e Doação - Autorregularização (novo módulo) */}
+          <Route path="giaitcmd/doacao/novo" element={<GIAITCMDDoacao />} />
+          <Route path="giaitcmd/doacao/:id" element={<GIAITCMDDoacao />} />
 
           {/* Autenticidade */}
           <Route path="autenticidade" element={<Autenticidade />} />

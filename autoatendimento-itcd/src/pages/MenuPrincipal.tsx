@@ -70,6 +70,15 @@ const MenuPrincipal: React.FC = () => {
       </div>
 
       <div className="sefaz-menu-section">
+        <div className="sefaz-menu-section__title">GIA-ITCMD-e (Novo Modulo)</div>
+        <ul className="sefaz-menu-section__items">
+          <li>
+            <Link to="/giaitcmd/doacao/novo">Incluir GIA-ITCMD-e Doacao</Link>
+          </li>
+        </ul>
+      </div>
+
+      <div className="sefaz-menu-section">
         <div className="sefaz-menu-section__title">Autenticidade</div>
         <ul className="sefaz-menu-section__items">
           <li>

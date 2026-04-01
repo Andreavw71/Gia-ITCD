@@ -1,0 +1,186 @@
+<?xml version = '1.0' encoding = 'ISO-8859-1'?>
+<project name="ITCD" default="make" basedir=".">
+  <!--Diretório home do JDeveloper-->
+  <property name="jdev.home" value="C:/Oracle/JDevStudio1013"/>
+
+  <!--Diretório de bibliotecas de classes Java utilizados para o projeto-->
+  <property name="project.lib" value="C:/Projeto/lib"/>
+
+  <!--Diretórios de output dos arquivos-->
+  <property name="compile.outdir" value="classes"/>
+  <property name="javadoc.outdir" value="javadoc"/>
+  <property name="package.outdir" value="deploy"/>
+
+  <!--Nomes de arquivos para empacotar-->
+  <property name="package.jar" value="itcd.jar"/>
+  <property name="package.ear" value="itcd.ear"/>
+  <property name="package.integracao" value="integracaoitcd.jar"/>
+
+  <!--Classpath das biblioteces utilizadas para a compilação de classes-->
+  <path id="classpath">
+    <pathelement location="${jdev.home}/j2ee/home/lib/servlet.jar"/>
+    <pathelement location="${compile.outdir}"/>
+    <pathelement location="${project.lib}/abaco.jar"/>
+    <pathelement location="${project.lib}/abacologdao.jar"/>
+    <pathelement location="${project.lib}/acessoweb.jar"/>
+    <pathelement location="${project.lib}/arrecadacao.jar"/>
+    <pathelement location="${project.lib}/commons-lang.jar"/>
+    <pathelement location="${project.lib}/cadastro.jar"/>
+    <pathelement location="${project.lib}/generico.jar"/>
+    <pathelement location="${project.lib}/gestaopessoas.jar"/>
+    <pathelement location="${project.lib}/ipva.jar"/>
+    <pathelement location="${project.lib}/integracaoipva.jar"/>    
+    <pathelement location="${project.lib}/integracaoarrecadacao.jar"/>
+    <pathelement location="${project.lib}/integracaocadastro.jar"/>
+    <pathelement location="${project.lib}/integracaocontacorrente.jar"/>
+    <pathelement location="${project.lib}/integracaogestaopessoas.jar"/>
+	 <pathelement location="${project.lib}/ccfiscal.jar"/>
+	 <pathelement location="${project.lib}/integracaoccfiscal.jar"/>
+    <pathelement location="${project.lib}/iText.jar"/>
+    <pathelement location="${project.lib}/log.jar"/>
+    <pathelement location="${project.lib}/xstream-1.3.1.jar"/>
+    <pathelement location="${project.lib}/eprocess.jar"/>
+    <pathelement location="${project.lib}/integracaoeprocess.jar"/>
+	<pathelement location="${project.lib}/integracaomef.jar"/>
+	<pathelement location="${project.lib}/mef.jar"/>
+	<pathelement location="${project.lib}/nds.jar"/>
+	<pathelement location="${project.lib}/integracaonds.jar"/>
+   <pathelement location="${project.lib}/commons-fileupload.jar"/>   
+   <pathelement location="${project.lib}/poi-3.9.jar"/>
+   <pathelement location="${project.lib}/poi-ooxml-3.9.jar"/>	
+   <pathelement location="${project.lib}/poi-ooxml-schemas-3.9.jar"/>
+   <pathelement location="${project.lib}/ooxml-schemas-1.1.jar"/>
+   <pathelement location="${project.lib}/xmlbeans-2.3.0.jar"/>
+   <pathelement location="${project.lib}/lpm.jar"/>
+   <pathelement location="${project.lib}/integracaolpm.jar"/>
+   <pathelement location="${project.lib}/visualizadorpdf.jar"/>
+   <pathelement location="${project.lib}/integracaovisualizadorpdf.jar"/>
+   <pathelement location="${project.lib}/cas.jar"/>
+   <pathelement location="${project.lib}/integracaocas.jar"/>
+   <pathelement location="${project.lib}/commons-httpclient.jar"/>
+   <pathelement location="${project.lib}/scl.jar"/>
+   <pathelement location="${project.lib}/integracaoscl.jar"/>
+   <pathelement location="${project.lib}/sos.jar"/>
+   <pathelement location="${project.lib}/integracaosos.jar"/>
+  </path>
+
+  <!--Diretório dos arquivos fontes da aplicação-->
+  <property name="src.dir" value="src"/>
+  <path id="srcpath">
+    <pathelement location="${src.dir}"/>
+  </path>
+  <property name="web.dir" value="web"/>
+
+  <target name="init">
+    <tstamp/>
+  </target>
+
+  <target name="compile" depends="init">
+    <!--Cria o diretório de saída para a compilação-->
+    <mkdir dir="${compile.outdir}"/>
+    <!--Exclui os arquivos jsps, caso já exista-->
+    <delete dir="${compile.outdir}/.jsps"/>
+    <!--Compila os códigos-fonte Java-->
+    <javac destdir="${compile.outdir}" debug="on" encoding="ISO-8859-1">
+      <classpath refid="classpath"/>
+      <src refid="srcpath"/>
+      <include name="**/*.java"/>
+    </javac>
+  </target>
+
+  <target name="doc" depends="init">
+    <mkdir dir="${javadoc.outdir}"/>
+    <!--Cria Javadoc-->
+    <javadoc sourcepathref="srcpath" classpathref="classpath" destdir="${javadoc.outdir}" encoding="ISO-8859-1" additionalparam="-J-Xmx32m">
+      <fileset dir="${src.dir}">
+        <include name="**/*.java"/>
+      </fileset>
+    </javadoc>
+    <!--Copia o arquivo de manifesto para o diretório destino-->
+    <copy file="${src.dir}/META-INF/MANIFEST.MF" tofile="${javadoc.outdir}/META-INF/MANIFEST.MF"/>
+  </target>
+
+  <target name="package" depends="init">
+    <mkdir dir="${package.outdir}"/>
+    <!--Cria arquivos JAR da aplicação-->
+    <jar destfile="${package.outdir}/${package.jar}" manifest="${src.dir}/META-INF/MANIFEST.MF">
+      <fileset dir="${compile.outdir}">
+        <include name="br/gov/mt/sefaz/itc/model/**/*.class"/>
+        <include name="br/gov/mt/sefaz/itc/util/**/*.class"/>
+        <exclude name="br/gov/mt/sefaz/itc/util/integracao/**/*Pesquisar.class"/>
+        <exclude name="br/gov/mt/sefaz/itc/util/servico/**/*.class"/>
+      </fileset>
+    </jar>
+    <!--Cria arquivos JAR dos módulos da aplicação-->
+    <jar destfile="${package.outdir}/web.jar" manifest="${src.dir}/META-INF/MANIFEST.MF" >
+      <fileset dir="${compile.outdir}">
+        <include name="br/gov/mt/sefaz/itc/modulo/**/*.class"/>
+        <include name="br/gov/mt/sefaz/itc/util/integracao/**/*Pesquisar.class"/>
+      </fileset>
+    </jar>
+    <!--Cria arquivos JAR para os serviços da aplicação-->
+    <jar destfile="${package.outdir}/servicoitcd.jar" manifest="${src.dir}/META-INF/MANIFEST.MF">
+    <manifest>
+    <attribute name="Main-Class" value="$ br.gov.mt.sefaz.itc.util.servico.automatico.ProtocolarGerarDarAvaliacaoAutomatico"/>
+    </manifest>
+      <fileset dir="${compile.outdir}">
+        <include name="br/gov/mt/sefaz/itc/util/servico/**/*.class"/>
+      </fileset>
+    </jar>
+	<!--Cria arquivos JAR para integração com a aplicação-->
+    <jar destfile="${package.outdir}/integracaoitcd.jar" manifest="${src.dir}/META-INF/MANIFEST.MF">
+      <fileset dir="${compile.outdir}">
+        <include name="br/gov/mt/sefaz/itc/integracao/**/*.class"/>
+      </fileset>
+    </jar>
+    <!--Cria arquivos WAR da aplicação-->
+    <war destfile="${package.outdir}/web.war"
+         manifest="${src.dir}/META-INF/MANIFEST.MF"
+         webxml="${web.dir}/WEB-INF/web.xml">
+      <!--Insere os arquivos web desta aplicação-->
+      <fileset dir="${web.dir}">
+        <include name="**/*.css"/>
+        <include name="**/*.dtd"/>
+        <include name="**/*.jar"/>
+        <include name="**/*.js"/>
+        <include name="**/*.jsp"/>        
+        <exclude name="**/Simulador*.jsp"/>
+        <exclude name="**/ViewMenu*.jsp"/>
+      </fileset>
+      <fileset dir="${web.dir}">
+         <include name="**/ViewMenuModAberto.jsp" /> 
+         <include name="**/giaitcd/ViewMenuGIAITCDIncluir.jsp" /> 
+      </fileset>
+      <!--Insere as bibliotecas específicas desta aplicação-->
+      <lib dir="${package.outdir}">
+        <include name="web.jar"/>
+      </lib>
+    </war>
+    <!--Cria arquivo EAR da aplicação-->
+    <ear destfile="${package.outdir}/${package.ear}" manifest="${src.dir}/META-INF/MANIFEST.MF" appxml="${src.dir}/META-INF/application.xml">
+      <fileset dir="${src.dir}">
+        <include name="META-INF/orion-application.xml"/>
+      </fileset>
+      <fileset dir="${package.outdir}">
+        <include name="web.war"/>
+      </fileset>
+    </ear>
+    <!--Excluindo arquivos que já estão empacotados no arquivo EAR-->
+    <delete file="${package.outdir}/web.jar"/>
+    <delete file="${package.outdir}/web.war"/>
+  </target>
+
+  <target name="clean">
+    <!--Exclui o conteúdo dos diretórios de saída-->
+    <delete dir="${compile.outdir}"/>
+    <delete dir="${javadoc.outdir}"/>
+    <delete dir="${package.outdir}"/>
+  </target>
+
+  <target name="make" depends="compile"/>
+
+  <target name="rebuild" depends="clean,compile"/>
+
+  <target name="all" depends="clean,compile,package"/>
+
+</project>

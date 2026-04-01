@@ -1,0 +1,1097 @@
+package br.gov.mt.sefaz.itc.util;
+
+import br.com.abaco.util.Validador;
+import br.com.abaco.util.formacesso.AbstractFormAcesso;
+import br.com.abaco.util.formacesso.FormAcessoBean;
+import br.com.abaco.util.http.JspUtil;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+
+/**
+ * Classe especializada em gerir mapeamentos de servlet e permissões de acessos do 
+ * sistema.
+ * @author Marlo Eichenberg Motta
+ * @author Anderson Boehler Iglesias Araujo
+ * @version $Revision: 1.4 $
+ */
+public final class FormAcesso extends AbstractFormAcesso
+{
+	private static String contexto = null;
+	private static Map listaDePermissoes = null;
+	//BEM - Tabela Básica
+	private static final String PERMISSAO_INCLUIR_BEM = "ITCINCBEM";
+	private static final String PERMISSAO_ALTERAR_BEM = "ITCALTBEM";
+	private static final String PERMISSAO_PESQUISAR_BEM = "ITCPESBEM";
+   
+   //IPTU PREFEITURA - Tabela Básica
+   private static final String PERMISSAO_IMPORTAR_ARQUIVO_IPTU = "ITCIMPIPTU";
+   
+   //IPTU CONSULTAR ARQUIVO PREFEITURA - Tabela Básica
+   private static final String PERMISSAO_CONSULTAR_ARQUIVO_IPTU = "ITCIMPCONIPTU";
+   
+	//BENFEITORIA - Tabela Básica
+	private static final String PERMISSAO_INCLUIR_BENFEITORIA = "ITCINCBENFEI";
+	private static final String PERMISSAO_ALTERAR_BENFEITORIA = "ITCALTBENFEI";
+	private static final String PERMISSAO_PESQUISAR_BENFEITORIA = "ITCPESBENFEI";
+	//CULTURA - Tabela Básica
+	private static final String PERMISSAO_INCLUIR_CULTURA = "ITCINCCULTUR";
+	private static final String PERMISSAO_ALTERAR_CULTURA = "ITCALTCULTUR";
+	private static final String PERMISSAO_PESQUISAR_CULTURA = "ITCPESCULTUR";
+   //TIPO PROCESSO - Tabela Básica
+   private static final String PERMISSAO_INCLUIR_TIPO_PROCESSO = "ITCINCTIPOPR";
+   //DISTANCIA - Tabela Básica
+   private static final String PERMISSAO_INCLUIR_DISTANCIA = "ITCINCDIST";
+   private static final String PERMISSAO_ALTERAR_DISTANCIA = "ITCALTDIST";
+   private static final String PERMISSAO_PESQUISAR_DISTANCIA = "ITCPESDIST";
+   //IPTU - Tabela Básica
+   private static final String PERMISSAO_INCLUIR_IPTU = "ITCINCIPTU";
+   private static final String PERMISSAO_ALTERAR_IPTU = "ITCALTIPTU";
+   private static final String PERMISSAO_PESQUISAR_IPTU= "ITCPESIPTU";
+   //CRITERIO MUNICIPIO - Tabela Básica
+   private static final String PERMISSAO_INCLUIR_CRIMUNI = "ITCINCCRIMUN";
+   private static final String PERMISSAO_ALTERAR_CRIMUNI = "ITCALTCRIMUN";
+   private static final String PERMISSAO_PESQUISAR_CRIMUNI= "ITCPESCRIMUN";
+   //BASE CALCULO IMOVEL RURAL - Tabela Básica
+   private static final String PERMISSAO_INCLUIR_BASE_CALCIMOVRU = "ITCINCBCALIR";
+   private static final String PERMISSAO_ALTERAR_BASE_CALCIMOVRU = "ITCALTBCALIR";
+   private static final String PERMISSAO_PESQUISAR_BASE_CALCIMOVRU = "ITCPESBCALIR";
+	//REBANHO - Tabela Básica
+	private static final String PERMISSAO_INCLUIR_REBANHO = "ITCINCREBANH";
+	private static final String PERMISSAO_ALTERAR_REBANHO = "ITCALTREBANH";
+	private static final String PERMISSAO_PESQUISAR_REBANHO = "ITCPESREBANH";
+	//CONSTRUCAO - Tabela Básica
+	private static final String PERMISSAO_INCLUIR_CONSTRUCAO = "ITCINCCONSTR";
+	private static final String PERMISSAO_ALTERAR_CONSTRUCAO = "ITCALTCONSTR";
+	private static final String PERMISSAO_PESQUISAR_CONSTRUCAO = "ITCPESCONSTR";
+	//NATUREZA DA OPERACAO - Tabela Básica
+	private static final String PERMISSAO_INCLUIR_NATUREZA_DA_OPERACAO = "ITCINCNATOPE";
+	private static final String PERMISSAO_ALTERAR_NATUREZA_DA_OPERACAO = "ITCALTNATOPE";
+	private static final String PERMISSAO_PESQUISAR_NATUREZA_DA_OPERACAO = "ITCPESNATOPE";
+	//CONFIGURACAO GERENCIAL DE PARAMETROS - Tabela Básica
+	private static final String PERMISSAO_INCLUIR_CONFIGURACAO_GERENCIAL_PARAMETROS = "ITCINCCFGGER";
+	private static final String PERMISSAO_ALTERAR_CONFIGURACAO_GERENCIAL_PARAMETROS = "ITCALTCFGGER";
+	//MULTA DE MORA - Tabela Básica
+	private static final String PERMISSAO_INCLUIR_MULTA_DE_MORA = "ITCINCMLTMOR";
+	//PARAMETROS DA LEGISLACAO  - Tabela Básica
+	private static final String PERMISSAO_INCLUIR_PARAMETROS_DA_LEGISLACAO = "ITCINCPARLEG";
+	private static final String PERMISSAO_ALTERAR_PARAMETROS_DA_LEGISLACAO = "ITCALTPARLEG";
+	private static final String PERMISSAO_PESQUISAR_PARAMETROS_DA_LEGISLACAO = "ITCPESPARLEG";
+	//AJUDA  - Tabela Básica
+	private static final String PERMISSAO_INCLUIR_AJUDA = "ITCINCAJUDA";
+	private static final String PERMISSAO_ALTERAR_AJUDA = "ITCALTAJUDA";
+	private static final String PERMISSAO_PESQUISAR_AJUDA = "ITCPESAJUDA";
+	private static final String PERMISSAO_SOLICITAR_AJUDA = "MODABERTO";
+	//-------FIM TABELAS BASICAS---------//
+	// Verificar permissao de alterar, e as alterar especificas GIA
+	//GIA-ITCD
+	private static final String PERMISSAO_PESQUISAR_GIAITCD = "MODABERTO";
+	private static final String PERMISSAO_ALTERAR_GIAITCD = "MODABERTO";
+	private static final String PERMISSAO_REIMPRIMIR_GIAITCD = "ITCREIMPGIA";
+	private static final String PERMISSAO_REIMPRIMIR_NOTIFICACAO_RETIFICACAO_GIAITCD = "ITCREINRGIA";
+	//GIA-ITCD INVENTARIO ARROLAMENTO
+	private static final String PERMISSAO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO = "MODABERTO";
+	//private static final String PERMISSAO_ALTERAR_GIAITCD_ALTERAR_INVENTARIO_ARROLAMENTO = PERMISSAO_ALTERAR_GIAITCD;
+   private static final String PERMISSAO_ALTERAR_GIAITCD_ALTERAR_INVENTARIO_ARROLAMENTO = "ITCGIAALTERA";
+	private static final String PERMISSAO_PESQUISAR_GIAITCD_INVENTARIO_ARROLAMENTO = "MODABERTO";
+	//GIA-ITCD DOACAO
+	private static final String PERMISSAO_INCLUIR_GIAITCD_DOACAO = "MODABERTO";
+	private static final String PERMISSAO_ALTERAR_GIAITCD_ALTERAR_DOACAO = PERMISSAO_ALTERAR_GIAITCD;
+	private static final String PERMISSAO_PESQUISAR_GIAITCD_DOACAO = "MODABERTO";
+	//GIA-ITCD SEPARACAO DIVORCIO PARTILHA
+	private static final String PERMISSAO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO = "MODABERTO";
+	//private static final String PERMISSAO_ALTERAR_GIAITCD_ALTERAR_SEPARACAO_DIVORCIO = PERMISSAO_ALTERAR_GIAITCD;
+   private static final String PERMISSAO_ALTERAR_GIAITCD_ALTERAR_SEPARACAO_DIVORCIO = "ITCGIAALTERA";
+	private static final String PERMISSAO_PESQUISAR_GIAITCD_SEPARACAO_DIVORCIO = "MODABERTO";
+	//GIA-ITCD AUTENTICIDADE
+	private static final String PERMISSAO_IMPRIMIR_AUTENTICIDADE = "ITCIMPGIAAUT";
+	private static final String PERMISSAO_PESQUISAR_GIAITCD_AUTENTICIDADE = "ITCPESGIAAUTENTI";
+	////GIA-ITCD ALTERAR STATUS
+	private static final String PERMISSAO_ALTERAR_STATUS_GIAITCD = "ITCALTGIASTA";
+	////AVALIAÇÃO
+	private static final String PERMISSAO_INCLUIR_AVALIACAO_GIAITCD = "ITCINCAVALGI";
+	private static final String PERMISSAO_PESQUISAR_AVALIACAO_GIAITCD = "ITCPESAVALGI";
+	private static final String PERMISSAO_ALTERAR_AVALIACAO_GIAITCD = "ITCALTAVALGI";
+	private static final String PERMISSAO_IMPRIMIR_AVALIACAO_GIAITCD = "ITCIMPAVALGI";
+	//GIA-ITCD INATIVAR
+	private static final String PERMISSAO_INATIVAR_GIAITCD = "ITCINAGIA";
+	//GIA-ITCD REATIVAR
+	private static final String PERMISSAO_REATIVAR_GIAITCD = "ITCREAGIA";
+	//CODIGO_VINCULAR_DAR_GIAITCD
+	private static final String PERMISSAO_VINCULAR_DAR_GIAITCD = "ITCVINDARGIA";
+	
+	private static final String PERMISSAO_ITC_MODABERTO = "ITCMODABERTO";
+   
+   
+   //------------------------ RELATORIO --------------------------------
+    private static final String PERMISSAO_INCLUIR_RELATORIO = "ITCINCREL";
+    private static final String PERMISSAO_PESQUISAR_RELATORIO = "ITCPESREL";
+    
+   
+   //-------------------- GIA - ITCD  IMPRIRMIR DAR DECLARACAO ----------------- 
+   private static final String PERMISSAO_GIAITCD_IMPRIMIR_DAR_DECLARACAO = "MODABERTO";
+    
+   
+	//Permissões de Acesso
+	//Bem
+	public static final String CODIGO_INCLUIR_BEM = "0000010";
+	public static final String CODIGO_ALTERAR_BEM = "0000020";
+	public static final String CODIGO_ALTERAR_BEM_PESQUISAR_BEM = "0000021";
+	public static final String CODIGO_PESQUISAR_BEM = "0000030";
+	//Benfeitoria
+	public static final String CODIGO_INCLUIR_BENFEITORIA = "0000040";
+	public static final String CODIGO_ALTERAR_BENFEITORIA = "0000050";
+	public static final String CODIGO_ALTERAR_BENFEITORIA_PESQUISAR_BENFEITORIA = "0000051";
+	public static final String CODIGO_PESQUISAR_BENFEITORIA = "0000060";
+	//Cultura   
+	public static final String CODIGO_INCLUIR_CULTURA = "0000070";
+	public static final String CODIGO_ALTERAR_CULTURA = "0000080";
+	public static final String CODIGO_ALTERAR_CULTURA_PESQUISAR_CULTURA = "0000081";
+	public static final String CODIGO_PESQUISAR_CULTURA = "0000090";
+   //Tipo Processo   
+   public static final String CODIGO_INCLUIR_TIPO_PROCESSO = "0000700";
+   public static final String CODIGO_ALTERAR_TIPO_PROCESSO = "0000710";
+   public static final String CODIGO_PESQUISAR_TIPO_PROCESSO = "0000720";
+   //Distancia   
+   public static final String CODIGO_INCLUIR_DISTANCIA = "0000470";
+   public static final String CODIGO_ALTERAR_DISTANCIA = "0000480";
+   //public static final String CODIGO_ALTERAR_DISTANCIA_PESQUISAR_CULTURA = "0000081";
+   public static final String CODIGO_PESQUISAR_DISTANCIA = "0000490";
+   //Criterio Municipio  
+   public static final String CODIGO_INCLUIR_CRITERIO_MUNICIPIO = "0000510";
+   public static final String CODIGO_ALTERAR_CRITERIO_MUNICIPIO = "0000520";
+   public static final String CODIGO_ALTERAR_CRITERIO_MUNICIPIO_PESQUISAR_CRITERIO_MUNICIPIO = "0000530";
+   public static final String CODIGO_PESQUISAR_CRITERIO_MUNICIPIO = "0000540";
+   // Base de Calculo Imovel Rural
+   public static final String CODIGO_INCLUIR_BASE_CALCULO_IMOVEL_RURAL = "0000560";
+   public static final String CODIGO_ALTERAR_BASE_CALCULO_IMOVEL_RURAL = "0000570";
+   public static final String CODIGO_PESQUISAR_BASE_CALCULO_IMOVEL_RURAL = "0000580";
+   
+   // IPTU
+   public static final String CODIGO_INCLUIR_IPTU = "0000650";
+   public static final String CODIGO_ALTERAR_IPTU = "0000660";
+   public static final String CODIGO_PESQUISAR_IPTU = "0000670";
+   
+   
+   // IPTU PREFEITURA
+   public static final String CODIGO_INCLUIR_IPTU_PREFEITURA = "0000680";
+   // IPTU CONSULTAR PREFEITURA
+   public static final String CODIGO_CONSULTAR_IPTU_PREFEITURA = "0000690";
+	
+   //Rebanho
+	public static final String CODIGO_INCLUIR_REBANHO = "0000100";
+	public static final String CODIGO_ALTERAR_REBANHO = "0000110";
+	public static final String CODIGO_ALTERAR_REBANHO_PESQUISAR_REBANHO = "0000111";
+	public static final String CODIGO_PESQUISAR_REBANHO = "0000120";
+	//Construcao
+	public static final String CODIGO_INCLUIR_CONSTRUCAO = "0000130";
+	public static final String CODIGO_ALTERAR_CONSTRUCAO = "0000140";
+	public static final String CODIGO_ALTERAR_CONSTRUCAO_PESQUISAR_CONSTRUCAO = "0000141";
+	public static final String CODIGO_PESQUISAR_CONSTRUCAO = "0000150";
+	//Natureza da operacao
+	public static final String CODIGO_INCLUIR_NATUREZA_DA_OPERACAO = "0000160";
+	public static final String CODIGO_ALTERAR_NATUREZA_DA_OPERACAO = "0000170";
+	public static final String CODIGO_ALTERAR_NATUREZA_DA_OPERACAO_PESQUISAR_NATUREZA_DA_OPERACAO = "0000171";
+	public static final String CODIGO_PESQUISAR_NATUREZA_DA_OPERACAO = "0000180";
+	//Configuracao gerencial
+	public static final String CODIGO_INCLUIR_CONFIGURACAO_GERENCIAL_PARAMETROS = "0000190";
+	public static final String CODIGO_ALTERAR_CONFIGURACAO_GERENCIAL_PARAMETROS = "0000200";
+	//Multa de mora
+	public static final String CODIGO_INCLUIR_MULTA_DE_MORA = "0000210";
+	//Parametros da legislacao
+	public static final String CODIGO_INCLUIR_PARAMETROS_DA_LEGISLACAO = "0000220";
+	public static final String CODIGO_ALTERAR_PARAMETROS_DA_LEGISLACAO = "0000230";
+	public static final String CODIGO_ALTERAR_PARAMETROS_DA_LEGISLACAO_PESQUISAR_PARAMETROS_DA_LEGISLACAO = "0000231";
+	public static final String CODIGO_PESQUISAR_PARAMETROS_DA_LEGISLACAO = "0000240";
+	//Ajuda
+	public static final String CODIGO_INCLUIR_AJUDA = "0000250";
+	public static final String CODIGO_ALTERAR_AJUDA = "0000260";
+	public static final String CODIGO_ALTERAR_AJUDA_PESQUISAR_AJUDA = "0000261";
+	public static final String CODIGO_PESQUISAR_AJUDA = "0000270";
+	public static final String CODIGO_SOLICITAR_AJUDA = "0000271";
+	//-------FIM PERMISSOES TABELAS BASICAS---------//
+	//======= GIA-ITCD =========//
+	public static final String CODIGO_PESQUISAR_GIAITCD = "0000280";
+	public static final String CODIGO_PESQUISAR_GIAITCD_PESQUISAR_CONTRIBUINTE = "0000281";
+	public static final String CODIGO_PESQUISAR_GIAITCD_INVENTARIO_ARROLAMENTO = "0000282";
+	public static final String CODIGO_PESQUISAR_GIAITCD_DOACAO = "0000283";
+	public static final String CODIGO_PESQUISAR_GIAITCD_SEPARACAO_DIVORCIO = "0000284";
+	public static final String CODIGO_LISTAR_GIASITCD = "0000285";
+	//GIA-ITCD INVENTARIO ARROLAMENTO
+	//Incluir
+	public static final String CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO = "0000290";
+	public static final String CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_PESQUISAR_CONTRIBUINTE = "0000291";
+	public static final String CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_PESQUISAR_NATUREZA_DA_OPERACAO = "0000292";
+	public static final String CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM = 
+		  "0000293";
+	public static final String CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL = "0000294";
+	public static final String CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO = 
+		  "0000295";
+	public static final String CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA = 
+		  "0000296";
+	public static final String CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO = 
+		  "0000297";
+	public static final String CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA = 
+		  "0000298";
+	public static final String CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_GERAR_IMAGEM = "0000299";
+	//Alterar
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO = "0000300";
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_PESQUISAR_CONTRIBUINTE = 
+		  "0000301";
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_PESQUISAR_NATUREZA_DA_OPERACAO = 
+		  "0000302";
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL = 
+		  "0000304";
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM = 
+		  "0000303";
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO = 
+		  "0000305";
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA = 
+		  "0000306";
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO = 
+		  "0000307";
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA = 
+		  "0000308";
+        
+        
+   //=============================== ALTERAR ITCD GIA INVENTARIO - SERVIDOR ====================================================================================
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_SERVIDOR = "0000600";
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_PESQUISAR_CONTRIBUINTE_SERVIDOR = 
+        "0000601";
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_PESQUISAR_NATUREZA_DA_OPERACAO_SERVIDOR = 
+        "0000602";
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_SERVIDOR = 
+        "0000604";
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM_SERVIDOR = 
+        "0000603";
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO_SERVIDOR = 
+        "0000605";
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA_SERVIDOR = 
+        "0000606";
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO_SERVIDOR = 
+        "0000607";
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA_SERVIDOR = 
+        "0000608";
+        
+	//GIA-ITCD DOACAO
+	// incluir
+	public static final String CODIGO_INCLUIR_GIAITCD_DOACAO = "0000310";
+	public static final String CODIGO_INCLUIR_GIAITCD_DOACAO_PESQUISAR_CONTRIBUINTE = "0000311";
+	public static final String CODIGO_INCLUIR_GIAITCD_DOACAO_PESQUISAR_NATUREZA_DA_OPERACAO = "0000312";
+	public static final String CODIGO_INCLUIR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM = "0000313";
+	public static final String CODIGO_INCLUIR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL = "0000314";
+	public static final String CODIGO_INCLUIR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO = "0000315";
+	public static final String CODIGO_INCLUIR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA = "0000316";
+	public static final String CODIGO_INCLUIR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO = "0000317";
+	public static final String CODIGO_INCLUIR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA = "0000318";
+	public static final String CODIGO_INCLUIR_GIAITCD_DOACAO_GERAR_IMAGEM = "0000319";
+	//Alterar
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO = "0000320";
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_PESQUISAR_CONTRIBUINTE = "0000321";
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_PESQUISAR_NATUREZA_DA_OPERACAO = "0000322";
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM = 
+		  "0000323";
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL = "0000324";
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO = 
+		  "0000325";
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA = 
+		  "0000326";
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO = 
+		  "0000327";
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA = 
+		  "0000328";
+        
+   // Alterar GIA - DOACAO - Servidor
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_SERVIDOR = "0000620";
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_PESQUISAR_CONTRIBUINTE_SERVIDOR = "0000621";
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_PESQUISAR_NATUREZA_DA_OPERACAO_SERVIDOR = "0000622";
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM_SERVIDOR = 
+        "0000623";
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_SERVIDOR = "0000624";
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO_SERVIDOR = 
+        "0000625";
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA_SERVIDOR = 
+        "0000626";
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO_SERVIDOR = 
+        "0000627";
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA_SERVIDOR = 
+        "0000628";
+   
+        
+	//GIA-ITCD SEPARACAO DIVORCIO PARTILHA
+	// incluir
+	public static final String CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO = "0000330";
+	public static final String CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_PESQUISAR_CONTRIBUINTE = "0000331";
+	public static final String CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_PESQUISAR_NATUREZA_DA_OPERACAO = "0000332";
+	public static final String CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM = 
+		  "0000333";
+	public static final String CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL = "0000334";
+	public static final String CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO = 
+		  "0000335";
+	public static final String CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA = 
+		  "0000336";
+	public static final String CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO = 
+		  "0000337";
+	public static final String CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA = 
+		  "0000338";
+	public static final String CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_GERAR_IMAGEM = "0000339";
+	//Alterar
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO = "0000340";
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_PESQUISAR_CONTRIBUINTE = 
+		  "0000341";
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_PESQUISAR_NATUREZA_DA_OPERACAO = 
+		  "0000342";
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM = 
+		  "0000343";
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL = 
+		  "0000344";
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO = 
+		  "0000345";
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA = 
+		  "0000346";
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO = 
+		  "0000347";
+	public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA = 
+		  "0000348";
+        
+   //======================= ALTERAR ITCD GIA SEPARACAO/DIVORCIO - SERVIDOR ====================================================================================
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_SERVIDOR = "0000640";
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_PESQUISAR_CONTRIBUINTE_SERVIDOR = 
+        "0000641";
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_PESQUISAR_NATUREZA_DA_OPERACAO_SERVIDOR = 
+        "0000642";
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM_SERVIDOR = 
+        "0000643";
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_SERVIDOR = 
+        "0000644";
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO_SERVIDOR = 
+        "0000645";
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA_SERVIDOR = 
+        "0000646";
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO_SERVIDOR = 
+        "0000647";
+   public static final String CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA_SERVIDOR = 
+        "0000648";
+        
+        
+	//ALTERAR GIA_ITCD
+	public static final String CODIGO_ALTERAR_GIAITCD = "0000350";
+	public static final String CODIGO_ALTERAR_GIAITCD_PESQUISAR_GIAITCD = "0000351";
+	public static final String CODIGO_ALTERAR_GIAITCD_PESQUISAR_GIAITCD_PESQUISAR_CONTRIBUINTE = "0000352";
+	public static final String CODIGO_ALTERAR_GIAITCD_PESQUISAR_GIAITCD_GERAR_IMAGEM = "0000353";
+	//REIMPRIMIR GIA_ITCD
+	public static final String CODIGO_REIMPRIMIR_GIAITCD = "0000360";
+	public static final String CODIGO_REIMPRIMIR_GIAITCD_PESQUISAR_CONTRIBUINTE = "0000361";
+	//GIA-ITCD AUTENTICIDADE
+	//Imprimir e pesquisar
+	public static final String CODIGO_IMPRIMIR_AUTENTICIDADE_GIAITCD = "0000370";
+	public static final String CODIGO_IMPRIMIR_AUTENTICIDADE_PESQUISAR_GIAITCD = "0000371";
+	public static final String CODIGO_IMPRIMIR_AUTENTICIDADE_GERAR_IMAGEM = "0000372";
+	//GIA-ITCD ALTERAR STATUS
+	public static final String CODIGO_ALTERAR_STATUS_GIAITCD = "0000380";
+	public static final String CODIGO_ALTERAR_STATUS_PESQUISAR_GIAITCD = "0000381";	
+	public static final String CODIGO_ALTERAR_STATUS_PESQUISAR_CONTRIBUINTE = "0000384";
+	// GIA-ITCD ENVIAR SENHA
+	public static final String CODIGO_ALTERAR_PESQUISAR_GIAITCD_ENVIAR_SENHA = "0000382";
+	public static final String CODIGO_ALTERAR_PESQUISAR_GIAITCD_ENVIAR_SENHA_PESQUISAR_CONTRIBUINTE = "0000383";
+	//REIMPRIMIR NOTIFICAÇÃO RETIFIC ACAO GIA_ITCD
+	public static final String CODIGO_REIMPRIMIR_NOTIFICACAO_RETIFICACAO_GIAITCD = "0000400";
+	public static final String CODIGO_REIMPRIMIR_NOTIFICACAO_RETIFICACAO_GIAITCD_PESQUISAR_CONTRIBUINTE = "0000401";
+	//GIA-ITCD INATIVAR
+	public static final String CODIGO_INATIVAR_GIAITCD = "0000410";
+	public static final String CODIGO_INATIVAR_GIAITCD_PESQUISAR_GIAITCD = "0000411";
+	public static final String CODIGO_INATIVAR_GIAITCD_PESQUISAR_GIAITCD_PESQUISAR_CONTRIBUINTE = "0000412";
+	//GIA-ITCD REATIVAR
+	public static final String CODIGO_REATIVAR_GIAITCD = "0000420";
+	public static final String CODIGO_REATIVAR_GIAITCD_PESQUISAR_GIAITCD = "0000421";
+	public static final String CODIGO_REATIVAR_GIAITCD_PESQUISAR_GIAITCD_PESQUISAR_CONTRIBUINTE = "0000422";
+	//AVALIAÇÃO
+	//incluir
+	public static final String CODIGO_INCLUIR_AVALIACAO_GIAITCD = "0000430";
+	public static final String CODIGO_INCLUIR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD = "0000431";
+	public static final String CODIGO_INCLUIR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD_PESQUISAR_CONTRIBUINTE = "0000432";
+	public static final String CODIGO_INCLUIR_AVALIACAO_GIAITCD_PESQUISAR_GESTAO_PESSOAS = "0000433";
+	//imprimir
+	public static final String CODIGO_IMPRIMIR_AVALIACAO_GIAITCD = "0000440";
+	public static final String CODIGO_IMPRIMIR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD = "0000441";
+	public static final String CODIGO_IMPRIMIR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD_PESQUISAR_CONTRIBUINTE = "0000442";
+	//alterar
+	public static final String CODIGO_ALTERAR_AVALIACAO_GIAITCD = "0000450";
+	public static final String CODIGO_ALTERAR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD = "0000451";
+	public static final String CODIGO_ALTERAR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD_PESQUISAR_CONTRIBUINTE = "0000452";
+	public static final String CODIGO_ALTERAR_AVALIACAO_GIAITCD_PESQUISAR_GESTAO_PESSOAS = "0000453";
+	//pesquisar
+	public static final String CODIGO_PESQUISAR_AVALIACAO_GIAITCD = "0000460";
+	public static final String CODIGO_PESQUISAR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD = "0000461";
+	public static final String CODIGO_PESQUISAR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD_PESQUISAR_CONTRIBUINTE = "0000462";
+	public static final String CODIGO_PESQUISAR_AVALIACAO_GIAITCD_PESQUISAR_GESTAO_PESSOAS = "0000463";
+	//Vincular DAR a GIA-ITCD
+	//GIA-ITCD VINCULAR DAR
+	public static final String CODIGO_VINCULAR_DAR_GIAITCD = "0000500";   
+   
+   //GIA ITCD PROTOCOLO FUNCIONALIDADE
+   public static final String CODIGO_PROTOCOLAR_GIA_ITCD = "0000510";
+   public static final String CODIGO_MONTAR_JSON_VEICULO = "0000520";
+
+   //-------------------- GIA - ITCD  IMPRIRMIR DAR DECLARACAO -----------------
+   public static final String CODIGO_GIAITCD_IMPRIMIR_DAR_DECLARACAO = "0000750";
+
+	/**
+	 * Nomenclatura das Servlets
+	 */
+	public static final String NOME_PESQUISAR_BEM = "PESQUISAR_BEM";
+	public static final String NOME_PESQUISAR_BENFEITORIA = "PESQUISAR_BENFEITORIA";
+	public static final String NOME_PESQUISAR_CULTURA = "PESQUISAR_CULTURA";
+   public static final String NOME_PESQUISAR_DISTANCIA = "PESQUISAR_DISTANCIA";
+   public static final String NOME_PESQUISAR_CRITERIO_MUNICIPIO = "PESQUISAR_CRITERIO_MUNICIPIO";
+	public static final String NOME_PESQUISAR_REBANHO = "PESQUISAR_REBANHO";
+	public static final String NOME_PESQUISAR_CONSTRUCAO = "PESQUISAR_CONSTRUCAO";
+	public static final String NOME_PESQUISAR_NATUREZA_DA_OPERACAO = "PESQUISAR_NATUREZA_DA_OPERACAO";
+	public static final String NOME_PESQUISAR_PARAMETROS_DA_LEGISLACAO = "PESQUISAR_PARAMETROS_DA_LEGISLACAO";
+	public static final String NOME_PESQUISAR_AJUDA = "PESQUISAR_AJUDA";
+	public static final String NOME_PESQUISAR_CONTRIBUINTE = "PESQUISAR_CONTRIBUINTE";
+	public static final String NOME_PESQUISAR_GIAITCD_INVENTARIO_ARROLAMENTO = 
+		  "PESQUISAR_GIAITCD_INVENTARIO_ARROLAMENTO";
+	public static final String NOME_PESQUISAR_GIAITCD_DOACAO = "PESQUISAR_GIAITCD_DOACAO";
+	public static final String NOME_PESQUISAR_GIAITCD_SEPARACAO_DIVORCIO = "PESQUISAR_GIAITCD_SEPARACAO_DIVORCIO";
+	public static final String NOME_PESQUISAR_GIAITCD = "PESQUISAR_GIAITCD";
+	public static final String NOME_INCLUIR_BEM_TRIBUTAVEL = "INCLUIR_BEM_TRIBUTAVEL";
+	public static final String NOME_ALTERAR_BEM_TRIBUTAVEL = "ALTERAR_BEM_TRIBUTAVEL";
+	public static final String NOME_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO = "ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO";
+	public static final String NOME_ALTERAR_GIAITCD_DOACAO = "ALTERAR_GIAITCD_DOACAO";
+	public static final String NOME_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO = "ALTERAR_GIAITCD_SEPARACAO_DIVORCIO";
+	public static final String NOME_PESQUISAR_GESTAO_PESSOAS = "NOME_PESQUISAR_GESTAO_PESSOAS";
+   
+   //----------------------------GIA - ITCD PROTOCOLO AUTOMATICO -----------------------------------------
+   //GIA-ITCD PROTOCOLO AUTOMATICO
+   private static final String PERMISSAO_PROTOCOLO_AUTOMATICO = "MODABERTO";
+   public static final String CODIGO_PROTOCOLO_AUTOMATICO = "0000550";
+   public static final String CODIGO_PROCESSO_VALIDAR = "0000551";
+   
+   public static final String CODIGO_INCLUIR_RELATORIO = "0000730";
+   public static final String CODIGO_PESQUISAR_RELATORIO = "0000740";
+   
+   
+
+	/**
+	 * Método construtor privado (singleton).
+	 * @implemented by Marlo Eichenberg Motta
+	 */
+	private FormAcesso()
+	{
+		super();
+	}
+
+	/**
+	 * Método que retorna a instância atual do FormAcesso.
+	 * 
+	 * @param request
+	 * @return br.gov.mt.sefaz.itc.util.FormAcesso
+	 * @implemented by Marlo Eichenberg Motta
+	 */
+	private static synchronized FormAcesso getInstance(HttpServletRequest request)
+	{
+		contexto = JspUtil.getContexto(request);
+		adicionaMapeamento();
+		return new FormAcesso();
+	}
+
+	private static synchronized void adicionaMapeamento()
+	{
+		if (listaDePermissoes == null)
+		{
+			listaDePermissoes = new HashMap();
+			//Bens
+			listaDePermissoes.put(CODIGO_INCLUIR_BEM, new FormAcessoBean(CODIGO_INCLUIR_BEM, PERMISSAO_INCLUIR_BEM, getContexto() + 
+								"tabelabasica/bem/incluir"));
+			listaDePermissoes.put(CODIGO_PESQUISAR_BEM, new FormAcessoBean(CODIGO_PESQUISAR_BEM, PERMISSAO_PESQUISAR_BEM, getContexto() + 
+								"tabelabasica/bem/pesquisar"));
+         // Pedido Relatório
+         listaDePermissoes.put(CODIGO_INCLUIR_RELATORIO, new FormAcessoBean(CODIGO_INCLUIR_RELATORIO, PERMISSAO_INCLUIR_RELATORIO, getContexto() + 
+                         "relatorio/incluir"));
+         listaDePermissoes.put(CODIGO_PESQUISAR_RELATORIO, new FormAcessoBean(CODIGO_PESQUISAR_RELATORIO, PERMISSAO_PESQUISAR_RELATORIO, getContexto() + 
+                         "relatorio/pesquisar"));
+			listaDePermissoes.put(CODIGO_ALTERAR_BEM, new FormAcessoBean(CODIGO_ALTERAR_BEM, PERMISSAO_ALTERAR_BEM, getContexto() + 
+								"tabelabasica/bem/alterar"));
+			listaDePermissoes.put(CODIGO_ALTERAR_BEM_PESQUISAR_BEM, new FormAcessoBean(CODIGO_ALTERAR_BEM_PESQUISAR_BEM, CODIGO_ALTERAR_BEM, PERMISSAO_ALTERAR_BEM, NOME_PESQUISAR_BEM, getContexto() + 
+								"tabelabasica/bem/alterar/pesquisar/bem"));                        
+		   //IPTU prefeitura
+		   listaDePermissoes.put(CODIGO_INCLUIR_IPTU_PREFEITURA, new FormAcessoBean(CODIGO_INCLUIR_IPTU_PREFEITURA, PERMISSAO_IMPORTAR_ARQUIVO_IPTU, getContexto() + 
+		                  "tabelabasica/iptuprefeitura/importar"));  
+		   //IPTU consultar prefeitura
+		   listaDePermissoes.put(CODIGO_CONSULTAR_IPTU_PREFEITURA, new FormAcessoBean(CODIGO_CONSULTAR_IPTU_PREFEITURA, PERMISSAO_CONSULTAR_ARQUIVO_IPTU, getContexto() + 
+		                  "tabelabasica/iptuprefeitura/consultar"));   
+			//Benfeitoria
+			listaDePermissoes.put(CODIGO_INCLUIR_BENFEITORIA, new FormAcessoBean(CODIGO_INCLUIR_BENFEITORIA, PERMISSAO_INCLUIR_BENFEITORIA, getContexto() + 
+								"tabelabasica/benfeitoria/incluir"));
+			listaDePermissoes.put(CODIGO_PESQUISAR_BENFEITORIA, new FormAcessoBean(CODIGO_PESQUISAR_BENFEITORIA, PERMISSAO_PESQUISAR_BENFEITORIA, getContexto() + 
+								"tabelabasica/benfeitoria/pesquisar"));
+			listaDePermissoes.put(CODIGO_ALTERAR_BENFEITORIA, new FormAcessoBean(CODIGO_ALTERAR_BENFEITORIA, PERMISSAO_ALTERAR_BENFEITORIA, getContexto() + 
+								"tabelabasica/benfeitoria/alterar"));
+			listaDePermissoes.put(CODIGO_ALTERAR_BENFEITORIA_PESQUISAR_BENFEITORIA, new FormAcessoBean(CODIGO_ALTERAR_BENFEITORIA_PESQUISAR_BENFEITORIA, CODIGO_ALTERAR_BENFEITORIA, PERMISSAO_ALTERAR_BENFEITORIA, NOME_PESQUISAR_BENFEITORIA, getContexto() + 
+								"tabelabasica/benfeitoria/alterar/pesquisar/benfeitoria"));
+			//Cultura
+			listaDePermissoes.put(CODIGO_INCLUIR_CULTURA, new FormAcessoBean(CODIGO_INCLUIR_CULTURA, PERMISSAO_INCLUIR_CULTURA, getContexto() + 
+								"tabelabasica/cultura/incluir"));
+			listaDePermissoes.put(CODIGO_PESQUISAR_CULTURA, new FormAcessoBean(CODIGO_PESQUISAR_CULTURA, PERMISSAO_PESQUISAR_CULTURA, getContexto() + 
+								"tabelabasica/cultura/pesquisar"));
+			listaDePermissoes.put(CODIGO_ALTERAR_CULTURA, new FormAcessoBean(CODIGO_ALTERAR_CULTURA, PERMISSAO_ALTERAR_CULTURA, getContexto() + 
+								"tabelabasica/cultura/alterar"));
+			listaDePermissoes.put(CODIGO_ALTERAR_CULTURA_PESQUISAR_CULTURA, new FormAcessoBean(CODIGO_ALTERAR_CULTURA_PESQUISAR_CULTURA, CODIGO_ALTERAR_CULTURA, PERMISSAO_ALTERAR_CULTURA, NOME_PESQUISAR_CULTURA, getContexto() + 
+								"tabelabasica/cultura/alterar/pesquisar/cultura"));
+		   //Cultura
+		   listaDePermissoes.put(CODIGO_INCLUIR_TIPO_PROCESSO, new FormAcessoBean(CODIGO_INCLUIR_TIPO_PROCESSO, PERMISSAO_INCLUIR_TIPO_PROCESSO, getContexto() + 
+		                  "tabelabasica/tipoprocesso/incluir"));               
+		   //Distancia
+		   listaDePermissoes.put(CODIGO_INCLUIR_DISTANCIA, new FormAcessoBean(CODIGO_INCLUIR_DISTANCIA, PERMISSAO_INCLUIR_DISTANCIA, getContexto() + 
+		                  "tabelabasica/distancia/incluir"));
+		   listaDePermissoes.put(CODIGO_PESQUISAR_DISTANCIA, new FormAcessoBean(CODIGO_PESQUISAR_DISTANCIA, PERMISSAO_PESQUISAR_DISTANCIA, getContexto() + 
+		                  "tabelabasica/distancia/pesquisar"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_DISTANCIA, new FormAcessoBean(CODIGO_ALTERAR_DISTANCIA, PERMISSAO_ALTERAR_DISTANCIA, getContexto() + 
+		                  "tabelabasica/distancia/alterar"));
+		   // IPTU
+		   listaDePermissoes.put(CODIGO_INCLUIR_IPTU, new FormAcessoBean(CODIGO_INCLUIR_IPTU, PERMISSAO_INCLUIR_IPTU, getContexto() + 
+		                  "tabelabasica/iptu/incluir"));
+		   listaDePermissoes.put(CODIGO_PESQUISAR_IPTU, new FormAcessoBean(CODIGO_PESQUISAR_IPTU, PERMISSAO_PESQUISAR_IPTU, getContexto() + 
+		                  "tabelabasica/iptu/pesquisar"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_IPTU, new FormAcessoBean(CODIGO_ALTERAR_IPTU, PERMISSAO_ALTERAR_IPTU, getContexto() + 
+		                  "tabelabasica/iptu/alterar"));
+//		   listaDePermissoes.put(CODIGO_ALTERAR_CULTURA_PESQUISAR_CULTURA, new FormAcessoBean(CODIGO_ALTERAR_CULTURA_PESQUISAR_CULTURA, CODIGO_ALTERAR_CULTURA, PERMISSAO_ALTERAR_CULTURA, NOME_PESQUISAR_DISTANCIA, getContexto() + 
+//		                  "tabelabasica/distancia/alterar/pesquisar/distancia"));
+
+          //Criterio Municipio
+          listaDePermissoes.put(CODIGO_INCLUIR_CRITERIO_MUNICIPIO, new FormAcessoBean(CODIGO_INCLUIR_CRITERIO_MUNICIPIO, PERMISSAO_INCLUIR_CRIMUNI, getContexto() + 
+                         "tabelabasica/criteriomunicipio/incluir"));
+          listaDePermissoes.put(CODIGO_PESQUISAR_CRITERIO_MUNICIPIO, new FormAcessoBean(CODIGO_PESQUISAR_CRITERIO_MUNICIPIO, PERMISSAO_PESQUISAR_CRIMUNI, getContexto() + 
+                         "tabelabasica/criteriomunicipio/pesquisar"));
+          listaDePermissoes.put(CODIGO_ALTERAR_CRITERIO_MUNICIPIO, new FormAcessoBean(CODIGO_ALTERAR_CRITERIO_MUNICIPIO, PERMISSAO_ALTERAR_CRIMUNI, getContexto() + 
+                         "tabelabasica/criteriomunicipio/alterar"));
+//         listaDePermissoes.put(CODIGO_ALTERAR_CRITERIO_MUNICIPIO_PESQUISAR_CRITERIO_MUNICIPIO, new FormAcessoBean(CODIGO_ALTERAR_CRITERIO_MUNICIPIO_PESQUISAR_CRITERIO_MUNICIPIO,CODIGO_ALTERAR_CRITERIO_MUNICIPIO, PERMISSAO_ALTERAR_CRIMUNI, NOME_PESQUISAR_CRITERIO_MUNICIPIO, getContexto() +
+//                        "tabelabasica/criteriomunicipio/alterar/pesquisar/criteriomunicipio"));
+
+         // Base de Cáculo Imóvel Rural
+          listaDePermissoes.put(CODIGO_INCLUIR_BASE_CALCULO_IMOVEL_RURAL, new FormAcessoBean(CODIGO_INCLUIR_BASE_CALCULO_IMOVEL_RURAL, PERMISSAO_INCLUIR_BASE_CALCIMOVRU, getContexto() + 
+                         "tabelabasica/basecalculoimovelrural/incluir"));
+          listaDePermissoes.put(CODIGO_PESQUISAR_BASE_CALCULO_IMOVEL_RURAL, new FormAcessoBean(CODIGO_PESQUISAR_BASE_CALCULO_IMOVEL_RURAL, PERMISSAO_PESQUISAR_BASE_CALCIMOVRU, getContexto() + 
+                         "tabelabasica/basecalculoimovelrural/pesquisar"));
+          listaDePermissoes.put(CODIGO_ALTERAR_BASE_CALCULO_IMOVEL_RURAL, new FormAcessoBean(CODIGO_ALTERAR_BASE_CALCULO_IMOVEL_RURAL, PERMISSAO_ALTERAR_BASE_CALCIMOVRU, getContexto() + 
+                         "tabelabasica/basecalculoimovelrural/alterar"));
+
+			//Rebanho
+			listaDePermissoes.put(CODIGO_INCLUIR_REBANHO, new FormAcessoBean(CODIGO_INCLUIR_REBANHO, PERMISSAO_INCLUIR_REBANHO, getContexto() + 
+								"tabelabasica/rebanho/incluir"));
+			listaDePermissoes.put(CODIGO_PESQUISAR_REBANHO, new FormAcessoBean(CODIGO_PESQUISAR_REBANHO, PERMISSAO_PESQUISAR_REBANHO, getContexto() + 
+								"tabelabasica/rebanho/pesquisar"));
+			listaDePermissoes.put(CODIGO_ALTERAR_REBANHO, new FormAcessoBean(CODIGO_ALTERAR_REBANHO, PERMISSAO_ALTERAR_REBANHO, getContexto() + 
+								"tabelabasica/rebanho/alterar"));
+			listaDePermissoes.put(CODIGO_ALTERAR_REBANHO_PESQUISAR_REBANHO, new FormAcessoBean(CODIGO_ALTERAR_REBANHO_PESQUISAR_REBANHO, CODIGO_ALTERAR_REBANHO, PERMISSAO_ALTERAR_REBANHO, NOME_PESQUISAR_REBANHO, getContexto() + 
+								"tabelabasica/rebanho/alterar/pesquisar/rebanho"));
+			//Construcao
+			listaDePermissoes.put(CODIGO_INCLUIR_CONSTRUCAO, new FormAcessoBean(CODIGO_INCLUIR_CONSTRUCAO, PERMISSAO_INCLUIR_CONSTRUCAO, getContexto() + 
+								"tabelabasica/construcao/incluir"));
+			listaDePermissoes.put(CODIGO_PESQUISAR_CONSTRUCAO, new FormAcessoBean(CODIGO_PESQUISAR_CONSTRUCAO, PERMISSAO_PESQUISAR_CONSTRUCAO, getContexto() + 
+								"tabelabasica/construcao/pesquisar"));
+			listaDePermissoes.put(CODIGO_ALTERAR_CONSTRUCAO, new FormAcessoBean(CODIGO_ALTERAR_CONSTRUCAO, PERMISSAO_ALTERAR_CONSTRUCAO, getContexto() + 
+								"tabelabasica/construcao/alterar"));
+			listaDePermissoes.put(CODIGO_ALTERAR_CONSTRUCAO_PESQUISAR_CONSTRUCAO, new FormAcessoBean(CODIGO_ALTERAR_CONSTRUCAO_PESQUISAR_CONSTRUCAO, CODIGO_ALTERAR_CONSTRUCAO, PERMISSAO_ALTERAR_CONSTRUCAO, NOME_PESQUISAR_CONSTRUCAO, getContexto() + 
+								"tabelabasica/construcao/alterar/pesquisar/construcao"));
+			//Natureza da operacao
+			listaDePermissoes.put(CODIGO_INCLUIR_NATUREZA_DA_OPERACAO, new FormAcessoBean(CODIGO_INCLUIR_NATUREZA_DA_OPERACAO, PERMISSAO_INCLUIR_NATUREZA_DA_OPERACAO, getContexto() + 
+								"tabelabasica/naturezadaoperacao/incluir"));
+			listaDePermissoes.put(CODIGO_PESQUISAR_NATUREZA_DA_OPERACAO, new FormAcessoBean(CODIGO_PESQUISAR_NATUREZA_DA_OPERACAO, PERMISSAO_PESQUISAR_NATUREZA_DA_OPERACAO, getContexto() + 
+								"tabelabasica/naturezadaoperacao/pesquisar"));
+			listaDePermissoes.put(CODIGO_ALTERAR_NATUREZA_DA_OPERACAO, new FormAcessoBean(CODIGO_ALTERAR_NATUREZA_DA_OPERACAO, PERMISSAO_ALTERAR_NATUREZA_DA_OPERACAO, getContexto() + 
+								"tabelabasica/naturezadaoperacao/alterar"));
+			listaDePermissoes.put(CODIGO_ALTERAR_NATUREZA_DA_OPERACAO_PESQUISAR_NATUREZA_DA_OPERACAO, new FormAcessoBean(CODIGO_ALTERAR_NATUREZA_DA_OPERACAO_PESQUISAR_NATUREZA_DA_OPERACAO, CODIGO_ALTERAR_NATUREZA_DA_OPERACAO, PERMISSAO_ALTERAR_NATUREZA_DA_OPERACAO, NOME_PESQUISAR_NATUREZA_DA_OPERACAO, getContexto() + 
+								"tabelabasica/naturezadaoperacao/alterar/pesquisar/naturezadaoperacao"));
+			//Configuracao Gerencial de Parametros
+			listaDePermissoes.put(CODIGO_INCLUIR_CONFIGURACAO_GERENCIAL_PARAMETROS, new FormAcessoBean(CODIGO_INCLUIR_CONFIGURACAO_GERENCIAL_PARAMETROS, PERMISSAO_INCLUIR_CONFIGURACAO_GERENCIAL_PARAMETROS, getContexto() + 
+								"tabelabasica/configuracaogerencialparametros/incluir"));
+			listaDePermissoes.put(CODIGO_ALTERAR_CONFIGURACAO_GERENCIAL_PARAMETROS, new FormAcessoBean(CODIGO_ALTERAR_CONFIGURACAO_GERENCIAL_PARAMETROS, PERMISSAO_ALTERAR_CONFIGURACAO_GERENCIAL_PARAMETROS, getContexto() + 
+								"tabelabasica/configuracaogerencialparametros/alterar"));
+			//Multa de mora
+			listaDePermissoes.put(CODIGO_INCLUIR_MULTA_DE_MORA, new FormAcessoBean(CODIGO_INCLUIR_MULTA_DE_MORA, PERMISSAO_INCLUIR_MULTA_DE_MORA, getContexto() + 
+								"tabelabasica/multademora/incluir"));
+			//Parametros da legislacao
+			listaDePermissoes.put(CODIGO_INCLUIR_PARAMETROS_DA_LEGISLACAO, new FormAcessoBean(CODIGO_INCLUIR_PARAMETROS_DA_LEGISLACAO, PERMISSAO_INCLUIR_PARAMETROS_DA_LEGISLACAO, getContexto() + 
+								"tabelabasica/parametrosdalegislacao/incluir"));
+			listaDePermissoes.put(CODIGO_PESQUISAR_PARAMETROS_DA_LEGISLACAO, new FormAcessoBean(CODIGO_PESQUISAR_PARAMETROS_DA_LEGISLACAO, PERMISSAO_PESQUISAR_PARAMETROS_DA_LEGISLACAO, getContexto() + 
+								"tabelabasica/parametrosdalegislacao/pesquisar"));
+			listaDePermissoes.put(CODIGO_ALTERAR_PARAMETROS_DA_LEGISLACAO, new FormAcessoBean(CODIGO_ALTERAR_PARAMETROS_DA_LEGISLACAO, PERMISSAO_ALTERAR_PARAMETROS_DA_LEGISLACAO, getContexto() + 
+								"tabelabasica/parametrosdalegislacao/alterar"));
+			listaDePermissoes.put(CODIGO_ALTERAR_PARAMETROS_DA_LEGISLACAO_PESQUISAR_PARAMETROS_DA_LEGISLACAO, new FormAcessoBean(CODIGO_ALTERAR_PARAMETROS_DA_LEGISLACAO_PESQUISAR_PARAMETROS_DA_LEGISLACAO, CODIGO_ALTERAR_PARAMETROS_DA_LEGISLACAO, PERMISSAO_ALTERAR_PARAMETROS_DA_LEGISLACAO, NOME_PESQUISAR_PARAMETROS_DA_LEGISLACAO, getContexto() + 
+								"tabelabasica/parametrosdalegislacao/alterar/pesquisar/parametrosdalegislacao"));
+			//Ajuda
+			listaDePermissoes.put(CODIGO_INCLUIR_AJUDA, new FormAcessoBean(CODIGO_INCLUIR_AJUDA, PERMISSAO_INCLUIR_AJUDA, getContexto() + 
+								"tabelabasica/ajuda/incluir"));
+			listaDePermissoes.put(CODIGO_PESQUISAR_AJUDA, new FormAcessoBean(CODIGO_PESQUISAR_AJUDA, PERMISSAO_PESQUISAR_AJUDA, getContexto() + 
+								"tabelabasica/ajuda/pesquisar"));
+			listaDePermissoes.put(CODIGO_ALTERAR_AJUDA, new FormAcessoBean(CODIGO_ALTERAR_AJUDA, PERMISSAO_ALTERAR_AJUDA, getContexto() + 
+								"tabelabasica/ajuda/alterar"));
+			listaDePermissoes.put(CODIGO_SOLICITAR_AJUDA, new FormAcessoBean(CODIGO_SOLICITAR_AJUDA, PERMISSAO_SOLICITAR_AJUDA, getContexto() + 
+								"tabelabasica/ajuda/solicitar"));
+			listaDePermissoes.put(CODIGO_ALTERAR_AJUDA_PESQUISAR_AJUDA, new FormAcessoBean(CODIGO_ALTERAR_AJUDA_PESQUISAR_AJUDA, CODIGO_ALTERAR_AJUDA, PERMISSAO_ALTERAR_AJUDA, NOME_PESQUISAR_AJUDA, getContexto() + 
+								"tabelabasica/ajuda/alterar/pesquisar/ajuda"));
+			//GIA-ITCD INATIVAR
+			listaDePermissoes.put(CODIGO_INATIVAR_GIAITCD, new FormAcessoBean(CODIGO_INATIVAR_GIAITCD, PERMISSAO_INATIVAR_GIAITCD, getContexto() + 
+								"generico/giaitcd/inativar"));
+			listaDePermissoes.put(CODIGO_INATIVAR_GIAITCD_PESQUISAR_GIAITCD, new FormAcessoBean(CODIGO_INATIVAR_GIAITCD_PESQUISAR_GIAITCD, CODIGO_INATIVAR_GIAITCD, PERMISSAO_INATIVAR_GIAITCD, NOME_PESQUISAR_GIAITCD, getContexto() + 
+								"generico/giaitcd/inativar/pesquisar/giaitcd"));
+			listaDePermissoes.put(CODIGO_INATIVAR_GIAITCD_PESQUISAR_GIAITCD_PESQUISAR_CONTRIBUINTE, new FormAcessoBean(CODIGO_INATIVAR_GIAITCD_PESQUISAR_GIAITCD_PESQUISAR_CONTRIBUINTE, CODIGO_INATIVAR_GIAITCD_PESQUISAR_GIAITCD, PERMISSAO_INATIVAR_GIAITCD, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+								"generico/giaitcd/inativar/pesquisar/giaitcd/contribuinte/pesquisar"));
+			//GIA-ITCD REATIVAR
+			listaDePermissoes.put(CODIGO_REATIVAR_GIAITCD, new FormAcessoBean(CODIGO_REATIVAR_GIAITCD, PERMISSAO_REATIVAR_GIAITCD, getContexto() + 
+								"generico/giaitcd/reativar"));
+			listaDePermissoes.put(CODIGO_REATIVAR_GIAITCD_PESQUISAR_GIAITCD, new FormAcessoBean(CODIGO_REATIVAR_GIAITCD_PESQUISAR_GIAITCD, CODIGO_REATIVAR_GIAITCD, PERMISSAO_REATIVAR_GIAITCD, NOME_PESQUISAR_GIAITCD, getContexto() + 
+								"generico/giaitcd/reativar/pesquisar/giaitcd"));
+			listaDePermissoes.put(CODIGO_REATIVAR_GIAITCD_PESQUISAR_GIAITCD_PESQUISAR_CONTRIBUINTE, new FormAcessoBean(CODIGO_REATIVAR_GIAITCD_PESQUISAR_GIAITCD_PESQUISAR_CONTRIBUINTE, CODIGO_REATIVAR_GIAITCD_PESQUISAR_GIAITCD, PERMISSAO_REATIVAR_GIAITCD, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+								"generico/giaitcd/reativar/pesquisar/giaitcd/contribuinte/pesquisar"));
+			// GIA-ITCD-ALTERAR 
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD, PERMISSAO_ALTERAR_GIAITCD, getContexto() + 
+								"generico/giaitcd/alterar"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_PESQUISAR_GIAITCD, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_PESQUISAR_GIAITCD, CODIGO_ALTERAR_GIAITCD, PERMISSAO_ALTERAR_GIAITCD, NOME_PESQUISAR_GIAITCD, getContexto() + 
+								"generico/giaitcd/alterar/pesquisar/giaitcd"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_PESQUISAR_GIAITCD_PESQUISAR_CONTRIBUINTE, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_PESQUISAR_GIAITCD_PESQUISAR_CONTRIBUINTE, CODIGO_ALTERAR_GIAITCD_PESQUISAR_GIAITCD, PERMISSAO_ALTERAR_GIAITCD, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+								"generico/giaitcd/alterar/pesquisar/giaitcd/contribuinte/pesquisar"));
+			listaDePermissoes.put(CODIGO_ALTERAR_PESQUISAR_GIAITCD_ENVIAR_SENHA, new FormAcessoBean(CODIGO_ALTERAR_PESQUISAR_GIAITCD_ENVIAR_SENHA, PERMISSAO_ALTERAR_GIAITCD, getContexto() + 
+								"generico/giaitcd/enviarsenha"));
+			listaDePermissoes.put(CODIGO_ALTERAR_PESQUISAR_GIAITCD_ENVIAR_SENHA_PESQUISAR_CONTRIBUINTE, new FormAcessoBean(CODIGO_ALTERAR_PESQUISAR_GIAITCD_ENVIAR_SENHA_PESQUISAR_CONTRIBUINTE, CODIGO_ALTERAR_PESQUISAR_GIAITCD_ENVIAR_SENHA, PERMISSAO_ALTERAR_GIAITCD, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+								"generico/giaitcd/enviarsenha/pesquisar/giaitcd/contribuinte/pesquisar"));
+			//GIA-ITCD - PESQUISAR
+			listaDePermissoes.put(CODIGO_PESQUISAR_GIAITCD, new FormAcessoBean(CODIGO_PESQUISAR_GIAITCD, PERMISSAO_PESQUISAR_GIAITCD, getContexto() + 
+								"generico/giaitcd/pesquisar"));
+			listaDePermissoes.put(CODIGO_PESQUISAR_GIAITCD_PESQUISAR_CONTRIBUINTE, new FormAcessoBean(CODIGO_PESQUISAR_GIAITCD_PESQUISAR_CONTRIBUINTE, CODIGO_PESQUISAR_GIAITCD, PERMISSAO_PESQUISAR_GIAITCD, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+								"generico/giaitcd/pesquisar/contribuinte/pesquisar"));
+			listaDePermissoes.put(CODIGO_REIMPRIMIR_GIAITCD, new FormAcessoBean(CODIGO_REIMPRIMIR_GIAITCD, PERMISSAO_REIMPRIMIR_GIAITCD, getContexto() + 
+								"generico/giaitcd/pesquisarreimprimir"));
+			listaDePermissoes.put(CODIGO_REIMPRIMIR_GIAITCD_PESQUISAR_CONTRIBUINTE, new FormAcessoBean(CODIGO_REIMPRIMIR_GIAITCD_PESQUISAR_CONTRIBUINTE, CODIGO_REIMPRIMIR_GIAITCD, PERMISSAO_REIMPRIMIR_GIAITCD, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+								"generico/giaitcd/pesquisarreimprimir/pesquisar/contribuinte"));
+			listaDePermissoes.put(CODIGO_REIMPRIMIR_NOTIFICACAO_RETIFICACAO_GIAITCD, new FormAcessoBean(CODIGO_REIMPRIMIR_NOTIFICACAO_RETIFICACAO_GIAITCD, PERMISSAO_REIMPRIMIR_NOTIFICACAO_RETIFICACAO_GIAITCD, getContexto() + 
+								"generico/giaitcd/pesquisarreimprimir/notificacaoretificacao"));
+			listaDePermissoes.put(CODIGO_REIMPRIMIR_NOTIFICACAO_RETIFICACAO_GIAITCD_PESQUISAR_CONTRIBUINTE, new FormAcessoBean(CODIGO_REIMPRIMIR_NOTIFICACAO_RETIFICACAO_GIAITCD_PESQUISAR_CONTRIBUINTE, CODIGO_REIMPRIMIR_NOTIFICACAO_RETIFICACAO_GIAITCD, PERMISSAO_REIMPRIMIR_NOTIFICACAO_RETIFICACAO_GIAITCD, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+								"generico/giaitcd/pesquisarreimprimir/notificacaoretificacao/pesquisar/contribuinte"));
+			listaDePermissoes.put(CODIGO_PESQUISAR_GIAITCD_INVENTARIO_ARROLAMENTO, new FormAcessoBean(CODIGO_PESQUISAR_GIAITCD_INVENTARIO_ARROLAMENTO, PERMISSAO_PESQUISAR_GIAITCD_INVENTARIO_ARROLAMENTO, getContexto() + 
+								"giaitcd/giaitcdinventarioarrolamento/pesquisar"));
+			listaDePermissoes.put(CODIGO_PESQUISAR_GIAITCD_DOACAO, new FormAcessoBean(CODIGO_PESQUISAR_GIAITCD_DOACAO, PERMISSAO_PESQUISAR_GIAITCD_DOACAO, getContexto() + 
+								"giaitcd/giaitcddoacao/pesquisar"));
+			listaDePermissoes.put(CODIGO_PESQUISAR_GIAITCD_SEPARACAO_DIVORCIO, new FormAcessoBean(CODIGO_PESQUISAR_GIAITCD_SEPARACAO_DIVORCIO, PERMISSAO_PESQUISAR_GIAITCD_SEPARACAO_DIVORCIO, getContexto() + 
+								"giaitcd/giaitcdseparacaodivorcio/pesquisar"));
+         // GIA-ITCD - PROTOCOLO AUTOMATICO               
+		   listaDePermissoes.put(CODIGO_PROTOCOLO_AUTOMATICO, new FormAcessoBean(CODIGO_PROTOCOLO_AUTOMATICO, PERMISSAO_PROTOCOLO_AUTOMATICO, getContexto() + 
+		                  "generico/giaitcd/protocolo"));
+		   listaDePermissoes.put(CODIGO_PROCESSO_VALIDAR, new FormAcessoBean(CODIGO_PROCESSO_VALIDAR, PERMISSAO_PROTOCOLO_AUTOMATICO, getContexto() + 
+		                  "generico/giaitcd/processo/validar"));  
+			//GIA-ITCD INVENTARIO ARROLAMENTO
+			//incluir
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO, PERMISSAO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO, getContexto() + 
+								"giaitcd/giaitcdinventarioarrolamento/incluir"));
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_PESQUISAR_CONTRIBUINTE, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_PESQUISAR_CONTRIBUINTE, CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO, PERMISSAO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+								"giaitcd/giaitcdinventarioarrolamento/incluir/pesquisar/contribuinte"));
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_PESQUISAR_NATUREZA_DA_OPERACAO, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_PESQUISAR_NATUREZA_DA_OPERACAO, CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO, PERMISSAO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO, NOME_PESQUISAR_NATUREZA_DA_OPERACAO, getContexto() + 
+								"giaitcd/giaitcdinventarioarrolamento/incluir/pesquisar/naturezadaoperacao"));
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM, CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO, NOME_PESQUISAR_BEM, getContexto() + 
+								"giaitcd/giaitcdinventarioarrolamento/incluir/bemtributavel/manter/pesquisar/bem"));
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL, CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO, PERMISSAO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO, NOME_INCLUIR_BEM_TRIBUTAVEL, getContexto() + 
+								"giaitcd/giaitcdinventarioarrolamento/incluir/bemtributavel/manter"));
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO, CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO, NOME_PESQUISAR_CONSTRUCAO, getContexto() + 
+								"giaitcd/giaitcdinventarioarrolamento/incluir/bemtributavel/manter/pesquisar/construcao"));
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA, CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO, NOME_PESQUISAR_CULTURA, getContexto() + 
+								"giaitcd/giaitcdinventarioarrolamento/incluir/bemtributavel/manter/pesquisar/cultura"));
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA, CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO, NOME_PESQUISAR_BENFEITORIA, getContexto() + 
+								"giaitcd/giaitcdinventarioarrolamento/incluir/bemtributavel/manter/pesquisar/benfeitoria"));
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO, CODIGO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_INCLUIR_GIAITCD_INVENTARIO_ARROLAMENTO, NOME_PESQUISAR_REBANHO, getContexto() + 
+								"giaitcd/giaitcdinventarioarrolamento/incluir/bemtributavel/manter/pesquisar/rebanho"));
+			//alterar
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO, CODIGO_ALTERAR_GIAITCD, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_INVENTARIO_ARROLAMENTO, NOME_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO, getContexto() + 
+								"giaitcd/alterar/giaitcdinventarioarrolamento/alterar"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_PESQUISAR_CONTRIBUINTE, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_PESQUISAR_CONTRIBUINTE, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_INVENTARIO_ARROLAMENTO, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+								"giaitcd/alterar/giaitcdinventarioarrolamento/alterar/pesquisar/contribuinte"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_PESQUISAR_NATUREZA_DA_OPERACAO, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_PESQUISAR_NATUREZA_DA_OPERACAO, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_INVENTARIO_ARROLAMENTO, NOME_PESQUISAR_NATUREZA_DA_OPERACAO, getContexto() + 
+								"giaitcd/alterar/giaitcdinventarioarrolamento/alterar/pesquisar/naturezadaoperacao"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_INVENTARIO_ARROLAMENTO, NOME_PESQUISAR_BEM, getContexto() + 
+								"giaitcd/alterar/giaitcdinventarioarrolamento/alterar/bemtributavel/manter/pesquisar/bem"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_INVENTARIO_ARROLAMENTO, NOME_ALTERAR_BEM_TRIBUTAVEL, getContexto() + 
+								"giaitcd/alterar/giaitcdinventarioarrolamento/alterar/bemtributavel/manter"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_INVENTARIO_ARROLAMENTO, NOME_PESQUISAR_CONSTRUCAO, getContexto() + 
+								"giaitcd/alterar/giaitcdinventarioarrolamento/alterar/bemtributavel/manter/pesquisar/construcao"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_INVENTARIO_ARROLAMENTO, NOME_PESQUISAR_CULTURA, getContexto() + 
+								"giaitcd/alterar/giaitcdinventarioarrolamento/alterar/bemtributavel/manter/pesquisar/cultura"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_INVENTARIO_ARROLAMENTO, NOME_PESQUISAR_BENFEITORIA, getContexto() + 
+								"giaitcd/alterar/giaitcdinventarioarrolamento/alterar/bemtributavel/manter/pesquisar/benfeitoria"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_INVENTARIO_ARROLAMENTO, NOME_PESQUISAR_REBANHO, getContexto() + 
+								"giaitcd/alterar/giaitcdinventarioarrolamento/alterar/bemtributavel/manter/pesquisar/rebanho"));
+                        
+                        
+		    // =========================================== ALTERAR ITCD GIA INVENTARIO - SEVIDOR =================================================================
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_SERVIDOR, CODIGO_ALTERAR_GIAITCD, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_INVENTARIO_ARROLAMENTO, NOME_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO, getContexto() + 
+		                  "giaitcd/alterar/giaitcdinventarioarrolamento/alterar/svr"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_PESQUISAR_CONTRIBUINTE_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_PESQUISAR_CONTRIBUINTE_SERVIDOR, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_SERVIDOR, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_INVENTARIO_ARROLAMENTO, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+		                  "giaitcd/alterar/giaitcdinventarioarrolamento/alterar/pesquisar/contribuinte/svr"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_PESQUISAR_NATUREZA_DA_OPERACAO_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_PESQUISAR_NATUREZA_DA_OPERACAO_SERVIDOR, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_SERVIDOR, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_INVENTARIO_ARROLAMENTO, NOME_PESQUISAR_NATUREZA_DA_OPERACAO, getContexto() + 
+		                  "giaitcd/alterar/giaitcdinventarioarrolamento/alterar/pesquisar/naturezadaoperacao/svr"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM_SERVIDOR, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_SERVIDOR, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_INVENTARIO_ARROLAMENTO, NOME_PESQUISAR_BEM, getContexto() + 
+		                  "giaitcd/alterar/giaitcdinventarioarrolamento/alterar/bemtributavel/manter/pesquisar/bem/svr"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_SERVIDOR, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_SERVIDOR, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_INVENTARIO_ARROLAMENTO, NOME_ALTERAR_BEM_TRIBUTAVEL, getContexto() + 
+		                  "giaitcd/alterar/giaitcdinventarioarrolamento/alterar/bemtributavel/manter/svr"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO_SERVIDOR, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_SERVIDOR, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_INVENTARIO_ARROLAMENTO, NOME_PESQUISAR_CONSTRUCAO, getContexto() + 
+		                  "giaitcd/alterar/giaitcdinventarioarrolamento/alterar/bemtributavel/manter/pesquisar/construcao/svr"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA_SERVIDOR, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_SERVIDOR, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_INVENTARIO_ARROLAMENTO, NOME_PESQUISAR_CULTURA, getContexto() + 
+		                  "giaitcd/alterar/giaitcdinventarioarrolamento/alterar/bemtributavel/manter/pesquisar/cultura/svr"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA_SERVIDOR, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_SERVIDOR, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_INVENTARIO_ARROLAMENTO, NOME_PESQUISAR_BENFEITORIA, getContexto() + 
+		                  "giaitcd/alterar/giaitcdinventarioarrolamento/alterar/bemtributavel/manter/pesquisar/benfeitoria/svr"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO_SERVIDOR, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_INVENTARIO_ARROLAMENTO_MANTER_BEM_TRIBUTAVEL_SERVIDOR, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_INVENTARIO_ARROLAMENTO, NOME_PESQUISAR_REBANHO, getContexto() + 
+		                  "giaitcd/alterar/giaitcdinventarioarrolamento/alterar/bemtributavel/manter/pesquisar/rebanho/svr"));
+                        
+                        
+			//GIA-ITCD SEPARACAO DIVROCIO
+			//incluir
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO, PERMISSAO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO, getContexto() + 
+								"giaitcd/giaitcdseparacaodivorcio/incluir"));
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_PESQUISAR_CONTRIBUINTE, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_PESQUISAR_CONTRIBUINTE, CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO, PERMISSAO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+								"giaitcd/giaitcdseparacaodivorcio/incluir/pesquisar/contribuinte"));
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_PESQUISAR_NATUREZA_DA_OPERACAO, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_PESQUISAR_NATUREZA_DA_OPERACAO, CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO, PERMISSAO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO, NOME_PESQUISAR_NATUREZA_DA_OPERACAO, getContexto() + 
+								"giaitcd/giaitcdseparacaodivorcio/incluir/pesquisar/naturezadaoperacao"));
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM, CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO, NOME_PESQUISAR_BEM, getContexto() + 
+								"giaitcd/giaitcdseparacaodivorcio/incluir/bemtributavel/manter/pesquisar/bem"));
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL, CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO, PERMISSAO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO, NOME_INCLUIR_BEM_TRIBUTAVEL, getContexto() + 
+								"giaitcd/giaitcdseparacaodivorcio/incluir/bemtributavel/manter"));
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO, CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO, NOME_PESQUISAR_CONSTRUCAO, getContexto() + 
+								"giaitcd/giaitcdseparacaodivorcio/incluir/bemtributavel/manter/pesquisar/construcao"));
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA, CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO, NOME_PESQUISAR_CULTURA, getContexto() + 
+								"giaitcd/giaitcdseparacaodivorcio/incluir/bemtributavel/manter/pesquisar/cultura"));
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA, CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO, NOME_PESQUISAR_BENFEITORIA, getContexto() + 
+								"giaitcd/giaitcdseparacaodivorcio/incluir/bemtributavel/manter/pesquisar/benfeitoria"));
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO, CODIGO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_INCLUIR_GIAITCD_SEPARACAO_DIVORCIO, NOME_PESQUISAR_REBANHO, getContexto() + 
+								"giaitcd/giaitcdseparacaodivorcio/incluir/bemtributavel/manter/pesquisar/rebanho"));
+			// alterar
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO, CODIGO_ALTERAR_GIAITCD, PERMISSAO_ALTERAR_GIAITCD, NOME_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO, getContexto() + 
+								"giaitcd/giaitcdseparacaodivorcio/alterar"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_PESQUISAR_CONTRIBUINTE, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_PESQUISAR_CONTRIBUINTE, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_SEPARACAO_DIVORCIO, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+								"giaitcd/giaitcdseparacaodivorcio/alterar/pesquisar/contribuinte"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_PESQUISAR_NATUREZA_DA_OPERACAO, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_PESQUISAR_NATUREZA_DA_OPERACAO, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_SEPARACAO_DIVORCIO, NOME_PESQUISAR_NATUREZA_DA_OPERACAO, getContexto() + 
+								"giaitcd/giaitcdseparacaodivorcio/alterar/pesquisar/naturezadaoperacao"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_SEPARACAO_DIVORCIO, NOME_PESQUISAR_BEM, getContexto() + 
+								"giaitcd/giaitcdseparacaodivorcio/alterar/bemtributavel/manter/pesquisar/bem"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_SEPARACAO_DIVORCIO, NOME_ALTERAR_BEM_TRIBUTAVEL, getContexto() + 
+								"giaitcd/giaitcdseparacaodivorcio/alterar/bemtributavel/manter"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_SEPARACAO_DIVORCIO, NOME_PESQUISAR_CONSTRUCAO, getContexto() + 
+								"giaitcd/giaitcdseparacaodivorcio/alterar/bemtributavel/manter/pesquisar/construcao"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_SEPARACAO_DIVORCIO, NOME_PESQUISAR_CULTURA, getContexto() + 
+								"giaitcd/giaitcdseparacaodivorcio/alterar/bemtributavel/manter/pesquisar/cultura"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_SEPARACAO_DIVORCIO, NOME_PESQUISAR_BENFEITORIA, getContexto() + 
+								"giaitcd/giaitcdseparacaodivorcio/alterar/bemtributavel/manter/pesquisar/benfeitoria"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_SEPARACAO_DIVORCIO, NOME_PESQUISAR_REBANHO, getContexto() + 
+								"giaitcd/giaitcdseparacaodivorcio/alterar/bemtributavel/manter/pesquisar/rebanho"));
+         
+          // =========================================== ALTERAR ITCD GIA SEPARACAO - SEVIDOR ==================================================================               
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_SERVIDOR, CODIGO_ALTERAR_GIAITCD, "ITCGIAALTERA", NOME_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO, getContexto() + 
+		                  "giaitcd/giaitcdseparacaodivorcio/alterar/svr"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_PESQUISAR_CONTRIBUINTE_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_PESQUISAR_CONTRIBUINTE_SERVIDOR, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_SERVIDOR, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_SEPARACAO_DIVORCIO, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+		                  "giaitcd/giaitcdseparacaodivorcio/alterar/pesquisar/contribuinte/svr"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_PESQUISAR_NATUREZA_DA_OPERACAO_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_PESQUISAR_NATUREZA_DA_OPERACAO_SERVIDOR, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_SERVIDOR, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_SEPARACAO_DIVORCIO, NOME_PESQUISAR_NATUREZA_DA_OPERACAO, getContexto() + 
+		                  "giaitcd/giaitcdseparacaodivorcio/alterar/pesquisar/naturezadaoperacao/svr"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM_SERVIDOR, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_SERVIDOR, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_SEPARACAO_DIVORCIO, NOME_PESQUISAR_BEM, getContexto() + 
+		                  "giaitcd/giaitcdseparacaodivorcio/alterar/bemtributavel/manter/pesquisar/bem/svr"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_SERVIDOR, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_SERVIDOR, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_SEPARACAO_DIVORCIO, NOME_ALTERAR_BEM_TRIBUTAVEL, getContexto() + 
+		                  "giaitcd/giaitcdseparacaodivorcio/alterar/bemtributavel/manter/svr"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO_SERVIDOR, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_SERVIDOR, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_SEPARACAO_DIVORCIO, NOME_PESQUISAR_CONSTRUCAO, getContexto() + 
+		                  "giaitcd/giaitcdseparacaodivorcio/alterar/bemtributavel/manter/pesquisar/construcao/svr"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA_SERVIDOR, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_SERVIDOR, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_SEPARACAO_DIVORCIO, NOME_PESQUISAR_CULTURA, getContexto() + 
+		                  "giaitcd/giaitcdseparacaodivorcio/alterar/bemtributavel/manter/pesquisar/cultura/svr"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA_SERVIDOR, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_SERVIDOR, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_SEPARACAO_DIVORCIO, NOME_PESQUISAR_BENFEITORIA, getContexto() + 
+		                  "giaitcd/giaitcdseparacaodivorcio/alterar/bemtributavel/manter/pesquisar/benfeitoria/svr"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO_SERVIDOR, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_SEPARACAO_DIVORCIO_MANTER_BEM_TRIBUTAVEL_SERVIDOR, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_SEPARACAO_DIVORCIO, NOME_PESQUISAR_REBANHO, getContexto() + 
+		                  "giaitcd/giaitcdseparacaodivorcio/alterar/bemtributavel/manter/pesquisar/rebanho/svr"));
+                        
+                        
+			//GIA-ITCD DOACAO
+			//incluir
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_DOACAO, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_DOACAO, PERMISSAO_INCLUIR_GIAITCD_DOACAO, getContexto() + 
+								"giaitcd/giaitcddoacao/incluir"));
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_DOACAO_PESQUISAR_CONTRIBUINTE, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_DOACAO_PESQUISAR_CONTRIBUINTE, CODIGO_INCLUIR_GIAITCD_DOACAO, PERMISSAO_INCLUIR_GIAITCD_DOACAO, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+								"giaitcd/giaitcddoacao/incluir/pesquisar/contribuinte"));
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_DOACAO_PESQUISAR_NATUREZA_DA_OPERACAO, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_DOACAO_PESQUISAR_NATUREZA_DA_OPERACAO, CODIGO_INCLUIR_GIAITCD_DOACAO, PERMISSAO_INCLUIR_GIAITCD_DOACAO, NOME_PESQUISAR_NATUREZA_DA_OPERACAO, getContexto() + 
+								"giaitcd/giaitcddoacao/incluir/pesquisar/naturezadaoperacao"));
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM, CODIGO_INCLUIR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_INCLUIR_GIAITCD_DOACAO, NOME_PESQUISAR_BEM, getContexto() + 
+								"giaitcd/giaitcddoacao/incluir/bemtributavel/manter/pesquisar/bem"));
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL, CODIGO_INCLUIR_GIAITCD_DOACAO, PERMISSAO_INCLUIR_GIAITCD_DOACAO, NOME_INCLUIR_BEM_TRIBUTAVEL, getContexto() + 
+								"giaitcd/giaitcddoacao/incluir/bemtributavel/manter"));
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO, CODIGO_INCLUIR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_INCLUIR_GIAITCD_DOACAO, NOME_PESQUISAR_CONSTRUCAO, getContexto() + 
+								"giaitcd/giaitcddoacao/incluir/bemtributavel/manter/pesquisar/construcao"));
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA, CODIGO_INCLUIR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_INCLUIR_GIAITCD_DOACAO, NOME_PESQUISAR_CULTURA, getContexto() + 
+								"giaitcd/giaitcddoacao/incluir/bemtributavel/manter/pesquisar/cultura"));
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA, CODIGO_INCLUIR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_INCLUIR_GIAITCD_DOACAO, NOME_PESQUISAR_BENFEITORIA, getContexto() + 
+								"giaitcd/giaitcddoacao/incluir/bemtributavel/manter/pesquisar/benfeitoria"));
+			listaDePermissoes.put(CODIGO_INCLUIR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO, new FormAcessoBean(CODIGO_INCLUIR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO, CODIGO_INCLUIR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_INCLUIR_GIAITCD_DOACAO, NOME_PESQUISAR_REBANHO, getContexto() + 
+								"giaitcd/giaitcddoacao/incluir/bemtributavel/manter/pesquisar/rebanho"));
+			// alterar
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO, CODIGO_ALTERAR_GIAITCD, PERMISSAO_ALTERAR_GIAITCD, NOME_ALTERAR_GIAITCD_DOACAO, getContexto() + 
+								"giaitcd/giaitcddoacao/alterar"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_PESQUISAR_CONTRIBUINTE, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_PESQUISAR_CONTRIBUINTE, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_DOACAO, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+								"giaitcd/giaitcddoacao/alterar/pesquisar/contribuinte"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_PESQUISAR_NATUREZA_DA_OPERACAO, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_PESQUISAR_NATUREZA_DA_OPERACAO, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_DOACAO, NOME_PESQUISAR_NATUREZA_DA_OPERACAO, getContexto() + 
+								"giaitcd/giaitcddoacao/alterar/pesquisar/naturezadaoperacao"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_DOACAO, NOME_PESQUISAR_BEM, getContexto() + 
+								"giaitcd/giaitcddoacao/alterar/bemtributavel/manter/pesquisar/bem"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_DOACAO, NOME_ALTERAR_BEM_TRIBUTAVEL, getContexto() + 
+								"giaitcd/giaitcddoacao/alterar/bemtributavel/manter"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_DOACAO, NOME_PESQUISAR_CONSTRUCAO, getContexto() + 
+								"giaitcd/giaitcddoacao/alterar/bemtributavel/manter/pesquisar/construcao"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_DOACAO, NOME_PESQUISAR_CULTURA, getContexto() + 
+								"giaitcd/giaitcddoacao/alterar/bemtributavel/manter/pesquisar/cultura"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_DOACAO, NOME_PESQUISAR_BENFEITORIA, getContexto() + 
+								"giaitcd/giaitcddoacao/alterar/bemtributavel/manter/pesquisar/benfeitoria"));
+			listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL, PERMISSAO_ALTERAR_GIAITCD_ALTERAR_DOACAO, NOME_PESQUISAR_REBANHO, getContexto() + 
+								"giaitcd/giaitcddoacao/alterar/bemtributavel/manter/pesquisar/rebanho"));
+
+		
+		   // =========================================== ALTERAR ITCD GIA DOACAO - SEVIDOR ======================================================================
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_SERVIDOR, CODIGO_ALTERAR_GIAITCD, "ITCGIAALTERA" , NOME_ALTERAR_GIAITCD_DOACAO, getContexto() + 
+		                  "giaitcd/giaitcddoacao/alterar/svr"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_PESQUISAR_CONTRIBUINTE_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_PESQUISAR_CONTRIBUINTE_SERVIDOR, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_SERVIDOR, "ITCGIAALTERA"  , NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+		                  "giaitcd/giaitcddoacao/alterar/pesquisar/contribuinte/svr"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_PESQUISAR_NATUREZA_DA_OPERACAO_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_PESQUISAR_NATUREZA_DA_OPERACAO_SERVIDOR, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_SERVIDOR, "ITCGIAALTERA"  , NOME_PESQUISAR_NATUREZA_DA_OPERACAO, getContexto() + 
+		                  "giaitcd/giaitcddoacao/alterar/pesquisar/naturezadaoperacao/svr"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BEM_SERVIDOR, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_SERVIDOR, "ITCGIAALTERA"  , NOME_PESQUISAR_BEM, getContexto() + 
+		                  "giaitcd/giaitcddoacao/alterar/bemtributavel/manter/pesquisar/bem/svr"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_SERVIDOR, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_SERVIDOR, "ITCGIAALTERA"  , NOME_ALTERAR_BEM_TRIBUTAVEL, getContexto() + 
+		                  "giaitcd/giaitcddoacao/alterar/bemtributavel/manter/svr"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CONSTRUCAO_SERVIDOR, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_SERVIDOR, "ITCGIAALTERA"  , NOME_PESQUISAR_CONSTRUCAO, getContexto() + 
+		                  "giaitcd/giaitcddoacao/alterar/bemtributavel/manter/pesquisar/construcao/svr"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_CULTURA_SERVIDOR, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_SERVIDOR, "ITCGIAALTERA"  , NOME_PESQUISAR_CULTURA, getContexto() + 
+		                  "giaitcd/giaitcddoacao/alterar/bemtributavel/manter/pesquisar/cultura/svr"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_BENFEITORIA_SERVIDOR, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_SERVIDOR, "ITCGIAALTERA"  , NOME_PESQUISAR_BENFEITORIA, getContexto() + 
+		                  "giaitcd/giaitcddoacao/alterar/bemtributavel/manter/pesquisar/benfeitoria/svr"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO_SERVIDOR, new FormAcessoBean(CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_PESQUISAR_REBANHO_SERVIDOR, CODIGO_ALTERAR_GIAITCD_ALTERAR_GIAITCD_DOACAO_MANTER_BEM_TRIBUTAVEL_SERVIDOR, "ITCGIAALTERA"  , NOME_PESQUISAR_REBANHO, getContexto() + 
+		                  "giaitcd/giaitcddoacao/alterar/bemtributavel/manter/pesquisar/rebanho/svr"));
+         
+         
+         //GIA-ITCD AUTENTICIDADE
+			//Iimprimir e pesquisar
+			listaDePermissoes.put(CODIGO_IMPRIMIR_AUTENTICIDADE_GIAITCD, new FormAcessoBean(CODIGO_IMPRIMIR_AUTENTICIDADE_GIAITCD, PERMISSAO_IMPRIMIR_AUTENTICIDADE, getContexto() + 
+								"giaitcd/autenticidade/imprimir"));
+			listaDePermissoes.put(CODIGO_IMPRIMIR_AUTENTICIDADE_PESQUISAR_GIAITCD, new FormAcessoBean(CODIGO_IMPRIMIR_AUTENTICIDADE_PESQUISAR_GIAITCD, CODIGO_IMPRIMIR_AUTENTICIDADE_GIAITCD, PERMISSAO_IMPRIMIR_AUTENTICIDADE, NOME_PESQUISAR_GIAITCD, getContexto() + 
+								"giaitcd/autenticidade/imprimir/pesquisar"));
+			//GIA-ITCD ALTERAR STATUS
+			listaDePermissoes.put(CODIGO_ALTERAR_STATUS_GIAITCD, new FormAcessoBean(CODIGO_ALTERAR_STATUS_GIAITCD, PERMISSAO_ALTERAR_STATUS_GIAITCD, getContexto() + 
+								"giaitcd/statusgiaitcd/alterar"));
+		   listaDePermissoes.put(CODIGO_ALTERAR_STATUS_PESQUISAR_GIAITCD, new FormAcessoBean(CODIGO_ALTERAR_STATUS_PESQUISAR_GIAITCD, CODIGO_ALTERAR_STATUS_GIAITCD, PERMISSAO_ALTERAR_STATUS_GIAITCD, NOME_PESQUISAR_GIAITCD, getContexto() + 
+		                  "giaitcd/statusgiaitcd/alterar/pesquisar/giaitcd"));
+			listaDePermissoes.put(CODIGO_ALTERAR_STATUS_PESQUISAR_CONTRIBUINTE, new FormAcessoBean(CODIGO_ALTERAR_STATUS_PESQUISAR_CONTRIBUINTE, CODIGO_ALTERAR_STATUS_PESQUISAR_GIAITCD, PERMISSAO_ALTERAR_STATUS_GIAITCD, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+								"giaitcd/statusgiaitcd/alterar/pesquisar/contribuinte"));
+			//AVALIAÇÃO
+			//Incluir
+			listaDePermissoes.put(CODIGO_INCLUIR_AVALIACAO_GIAITCD, new FormAcessoBean(CODIGO_INCLUIR_AVALIACAO_GIAITCD, PERMISSAO_INCLUIR_AVALIACAO_GIAITCD, getContexto() + 
+								"generico/avaliacao/incluir"));
+			listaDePermissoes.put(CODIGO_INCLUIR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD, new FormAcessoBean(CODIGO_INCLUIR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD, CODIGO_INCLUIR_AVALIACAO_GIAITCD, PERMISSAO_INCLUIR_AVALIACAO_GIAITCD, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+								"generico/avaliacao/incluir/pesquisar/giaitcd"));
+			listaDePermissoes.put(CODIGO_INCLUIR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD_PESQUISAR_CONTRIBUINTE, new FormAcessoBean(CODIGO_INCLUIR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD_PESQUISAR_CONTRIBUINTE, CODIGO_INCLUIR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD, PERMISSAO_INCLUIR_AVALIACAO_GIAITCD, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+								"generico/avaliacao/incluir/pesquisar/giaitcd/pesquisar/contribuinte"));
+			listaDePermissoes.put(CODIGO_INCLUIR_AVALIACAO_GIAITCD_PESQUISAR_GESTAO_PESSOAS, new FormAcessoBean(CODIGO_INCLUIR_AVALIACAO_GIAITCD_PESQUISAR_GESTAO_PESSOAS, CODIGO_INCLUIR_AVALIACAO_GIAITCD, PERMISSAO_INCLUIR_AVALIACAO_GIAITCD, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+								"generico/avaliacao/incluir/pesquisar/servidor"));
+			//alterar
+			listaDePermissoes.put(CODIGO_ALTERAR_AVALIACAO_GIAITCD, new FormAcessoBean(CODIGO_ALTERAR_AVALIACAO_GIAITCD, PERMISSAO_ALTERAR_AVALIACAO_GIAITCD, getContexto() + 
+								"generico/avaliacao/alterar"));
+			listaDePermissoes.put(CODIGO_ALTERAR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD, new FormAcessoBean(CODIGO_ALTERAR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD, CODIGO_ALTERAR_AVALIACAO_GIAITCD, PERMISSAO_ALTERAR_AVALIACAO_GIAITCD, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+								"generico/avaliacao/alterar/pesquisar/giaitcd"));
+			listaDePermissoes.put(CODIGO_ALTERAR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD_PESQUISAR_CONTRIBUINTE, new FormAcessoBean(CODIGO_ALTERAR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD_PESQUISAR_CONTRIBUINTE, CODIGO_ALTERAR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD, PERMISSAO_ALTERAR_AVALIACAO_GIAITCD, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+								"generico/avaliacao/alterar/pesquisar/giaitcd/pesquisar/contribuinte"));
+			listaDePermissoes.put(CODIGO_ALTERAR_AVALIACAO_GIAITCD_PESQUISAR_GESTAO_PESSOAS, new FormAcessoBean(CODIGO_ALTERAR_AVALIACAO_GIAITCD_PESQUISAR_GESTAO_PESSOAS, CODIGO_ALTERAR_AVALIACAO_GIAITCD, PERMISSAO_ALTERAR_AVALIACAO_GIAITCD, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+								"generico/avaliacao/alterar/pesquisar/servidor"));
+			//imprimir
+			listaDePermissoes.put(CODIGO_IMPRIMIR_AVALIACAO_GIAITCD, new FormAcessoBean(CODIGO_IMPRIMIR_AVALIACAO_GIAITCD, PERMISSAO_IMPRIMIR_AVALIACAO_GIAITCD, getContexto() + 
+								"generico/avaliacao/imprimir"));
+			listaDePermissoes.put(CODIGO_IMPRIMIR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD, new FormAcessoBean(CODIGO_IMPRIMIR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD, CODIGO_IMPRIMIR_AVALIACAO_GIAITCD, PERMISSAO_IMPRIMIR_AVALIACAO_GIAITCD, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+								"generico/avaliacao/imprimir/pesquisar/giaitcd"));
+			listaDePermissoes.put(CODIGO_IMPRIMIR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD_PESQUISAR_CONTRIBUINTE, new FormAcessoBean(CODIGO_IMPRIMIR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD_PESQUISAR_CONTRIBUINTE, CODIGO_IMPRIMIR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD, PERMISSAO_IMPRIMIR_AVALIACAO_GIAITCD, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+								"generico/avaliacao/imprimir/pesquisar/giaitcd/pesquisar/contribuinte"));
+			//Pesquisar
+			listaDePermissoes.put(CODIGO_PESQUISAR_AVALIACAO_GIAITCD, new FormAcessoBean(CODIGO_PESQUISAR_AVALIACAO_GIAITCD, PERMISSAO_PESQUISAR_AVALIACAO_GIAITCD, getContexto() + 
+								"generico/avaliacao/pesquisar"));
+			listaDePermissoes.put(CODIGO_PESQUISAR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD, new FormAcessoBean(CODIGO_PESQUISAR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD, CODIGO_PESQUISAR_AVALIACAO_GIAITCD, PERMISSAO_PESQUISAR_AVALIACAO_GIAITCD, NOME_PESQUISAR_GIAITCD, getContexto() + 
+								"generico/avaliacao/pesquisar/pesquisar/giaitcd"));
+			listaDePermissoes.put(CODIGO_PESQUISAR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD_PESQUISAR_CONTRIBUINTE, new FormAcessoBean(CODIGO_PESQUISAR_AVALIACAO_GIAITCD_PESQUISAR_GIAITCD_PESQUISAR_CONTRIBUINTE, CODIGO_PESQUISAR_AVALIACAO_GIAITCD, PERMISSAO_PESQUISAR_AVALIACAO_GIAITCD, NOME_PESQUISAR_CONTRIBUINTE, getContexto() + 
+								"generico/avaliacao/pesquisar/pesquisar/giaitcd/pesquisar/contribuinte"));
+			listaDePermissoes.put(CODIGO_PESQUISAR_AVALIACAO_GIAITCD_PESQUISAR_GESTAO_PESSOAS, new FormAcessoBean(CODIGO_PESQUISAR_AVALIACAO_GIAITCD_PESQUISAR_GESTAO_PESSOAS, CODIGO_PESQUISAR_AVALIACAO_GIAITCD, PERMISSAO_PESQUISAR_AVALIACAO_GIAITCD, NOME_PESQUISAR_GESTAO_PESSOAS, getContexto() + 
+								"generico/avaliacao/pesquisar/pesquisar/gestaopessoas"));
+			listaDePermissoes.put(CODIGO_VINCULAR_DAR_GIAITCD, new FormAcessoBean(CODIGO_VINCULAR_DAR_GIAITCD, PERMISSAO_VINCULAR_DAR_GIAITCD, getContexto() + 
+								"generico/vinculardargiaitcd"));
+                        
+		   listaDePermissoes.put(CODIGO_MONTAR_JSON_VEICULO, new FormAcessoBean(CODIGO_MONTAR_JSON_VEICULO, PERMISSAO_PROTOCOLO_AUTOMATICO, getContexto() + 
+		                  "modulo/fichaVeiculo"));
+		   listaDePermissoes.put(CODIGO_GIAITCD_IMPRIMIR_DAR_DECLARACAO, new FormAcessoBean(CODIGO_GIAITCD_IMPRIMIR_DAR_DECLARACAO, PERMISSAO_GIAITCD_IMPRIMIR_DAR_DECLARACAO, getContexto() + 
+		                  "generico/giaitcd/imprimirdardeclaracao"));
+		}
+	}
+
+	/**
+	 * Método responsável por retornar o Contexto.
+	 * @implemented by Marlo Eichenberg Motta
+	 * 
+	 * @return java.lang.String
+	 */
+	private static synchronized String getContexto()
+	{
+		return contexto;
+	}
+
+	/**
+	 * Método responsável por retornar a URL da Servlet original. Deve 
+	 * obrigatoriamente ser utilizado por páginas JSP para redirecionar para Servlets.
+	 * 
+	 * @param codigoOriginal
+	 * @param request
+	 * @return java.lang.String
+	 * @implemented by Marlo Eichenberg Motta
+	 * 
+	 */
+	public static String getUrlServletOriginal(String codigoOriginal, HttpServletRequest request)
+	{
+		FormAcesso formAcesso = getInstance(request);
+		if (Validador.isStringValida(codigoOriginal) && listaDePermissoes.containsKey(codigoOriginal))
+		{
+         //System.out.println("----------getUrlServletOriginal : FormAcesso - URL : "+((FormAcessoBean) listaDePermissoes.get(codigoOriginal)).getUrl()   +" CODIGO : "+codigoOriginal +" PAI : "+((FormAcessoBean) listaDePermissoes.get(codigoOriginal)).getCodigoPai()  );
+			return ((FormAcessoBean) listaDePermissoes.get(codigoOriginal)).getUrl();
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/**
+	 * Método responsável por retornar a URL da Servlet original sem contexto. Deve 
+	 * obrigatoriamente ser utilizado por Servlets principais (Servlet Pai) para 
+	 * redirecionar para outras Servlets (Servlets Filhas).
+	 * 
+	 * @param codigoOriginal
+	 * @param request
+	 * @return java.lang.String
+	 * @implemented by Marlo Eichenberg Motta
+	 * 
+	 */
+	public static String getUrlServletOriginalSemContexto(String codigoOriginal, HttpServletRequest request)
+	{
+		FormAcesso formAcesso = getInstance(request);
+		if (Validador.isStringValida(codigoOriginal) && listaDePermissoes.containsKey(codigoOriginal))
+		{
+			return removeContextoUrl(((FormAcessoBean) listaDePermissoes.get(codigoOriginal)).getUrl());
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/**
+	 * Método responsável por retornar a URL da Servlet original sem contexto passando 
+	 * como parâmetro o código da Servlet Pai e o nome da Servlet original. Deve 
+	 * obrigatoriamente ser utilizado em Servlets filhas para redirecionar para suas 
+	 * Servlets Filhas.
+	 * @implemented by Marlo Eichenberg Motta
+	 * 
+	 * @param codigoPai
+	 * @param nomeServletOriginal
+	 * @param request
+	 * @return java.lang.String
+	 */
+	public static String getUrlServletOriginalSemContexto(String codigoPai, String nomeServletOriginal, HttpServletRequest request)
+	{
+		FormAcesso formAcesso = getInstance(request);
+		if (Validador.isStringValida(codigoPai) && listaDePermissoes.containsKey(codigoPai))
+		{
+			Iterator it = listaDePermissoes.values().iterator();
+			while (it.hasNext())
+			{
+				FormAcessoBean formAcessoBeanAtual = (FormAcessoBean) it.next();
+				if (Validador.isStringValida(formAcessoBeanAtual.getCodigoPai()) && 
+							  Validador.isStringValida(formAcessoBeanAtual.getNomeServletOriginal()))
+				{
+					if (formAcessoBeanAtual.getCodigoPai().equals(codigoPai) && 
+									 formAcessoBeanAtual.getNomeServletOriginal().equals(nomeServletOriginal))
+					{
+						return removeContextoUrl(formAcessoBeanAtual.getUrl());
+					}
+					else
+					{
+						continue;
+					}
+				}
+				else
+				{
+					continue;
+				}
+			}
+			return null;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/**
+	 * Método responsável por retornar a URL da Servlet Pai.
+	 * 
+	 * @param codigoOriginal
+	 * @param request
+	 * @return java.lang.String
+	 * @implemented by Marlo Eichenberg Motta
+	 * 
+	 */
+	public static String getUrlServletPai(String codigoOriginal, HttpServletRequest request)
+	{
+		FormAcesso formAcesso = getInstance(request);
+		if (Validador.isStringValida(codigoOriginal) && listaDePermissoes.containsKey(codigoOriginal))
+		{
+			String codigoPai = ((FormAcessoBean) listaDePermissoes.get(codigoOriginal)).getCodigoPai();
+			String urlPai = ((FormAcessoBean) listaDePermissoes.get(codigoPai)).getUrl();
+			String urlSemContexto = removeContextoUrl(urlPai);
+		   //System.out.println("----------getUrlServletPai : FormAcesso - URL : "+((FormAcessoBean) listaDePermissoes.get(codigoOriginal)).getUrl()   +" CODIGO : "+codigoOriginal +" PAI : "+((FormAcessoBean) listaDePermissoes.get(codigoOriginal)).getCodigoPai());
+			return urlSemContexto;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/**
+	 * Método responsável por remover o Contexto da URL.
+	 * @param url
+	 * @return java.lang.String
+	 * @implemented by Marlo Eichenberg Motta
+	 * 
+	 */
+	private static String removeContextoUrl(String url)
+	{
+		int tamanhoContexto = contexto.length();
+		String urlSemContexto = "/" + url.substring(tamanhoContexto);
+		return urlSemContexto;
+	}
+
+	/**
+	 * Método responsável por retornar a permissão de acesso.
+	 * @implemented by Marlo Eichenberg Motta
+	 * 
+	 * @param chave
+	 * @param request
+	 * @return java.lang.String
+	 */
+	public static String getPermissaoAcesso(String chave, HttpServletRequest request)
+	{
+		FormAcesso formAcesso = getInstance(request);
+		if (Validador.isStringValida(chave) && listaDePermissoes.containsKey(chave))
+		{
+			return ((FormAcessoBean) listaDePermissoes.get(chave)).getPermissao();
+		}
+		else
+		{
+			return null;
+		}
+	}
+}

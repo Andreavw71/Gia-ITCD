@@ -1,0 +1,640 @@
+/* ============================================================
+   SEFAZ-MT - Estilos do Sistema de Autoatendimento ITCD
+   Baseado no SefazEstilos.css original
+   ============================================================ */
+
+:root {
+  --sefaz-azul-escuro: #003366;
+  --sefaz-azul-medio: #336699;
+  --sefaz-azul-claro: #6699CC;
+  --sefaz-verde: #006633;
+  --sefaz-verde-claro: #339966;
+  --sefaz-cinza-escuro: #333333;
+  --sefaz-cinza-medio: #666666;
+  --sefaz-cinza-claro: #CCCCCC;
+  --sefaz-cinza-bg: #F5F5F5;
+  --sefaz-branco: #FFFFFF;
+  --sefaz-vermelho: #CC0000;
+  --sefaz-amarelo: #FFCC00;
+  --sefaz-laranja: #FF6600;
+  --sefaz-titulo-bg: #003366;
+  --sefaz-titulo-fg: #FFFFFF;
+  --sefaz-subtitulo-bg: #336699;
+  --sefaz-subtitulo-fg: #FFFFFF;
+  --sefaz-rotulo-bg: #E8E8E8;
+  --sefaz-campo-bg: #FFFFFF;
+  --sefaz-borda: #CCCCCC;
+  --sefaz-link: #003366;
+  --sefaz-link-hover: #FF6600;
+  --sefaz-font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
+  --sefaz-font-size: 11px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--sefaz-font-family);
+  font-size: var(--sefaz-font-size);
+  color: var(--sefaz-cinza-escuro);
+  background-color: var(--sefaz-cinza-bg);
+}
+
+a {
+  color: var(--sefaz-link);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--sefaz-link-hover);
+  text-decoration: underline;
+}
+
+/* ============ Layout ============ */
+
+.sefaz-body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.sefaz-header {
+  background-color: var(--sefaz-azul-escuro);
+  color: var(--sefaz-branco);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.sefaz-header__logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sefaz-header__logo img {
+  height: 40px;
+}
+
+.sefaz-header__title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.sefaz-header__subtitle {
+  font-size: 11px;
+  color: var(--sefaz-cinza-claro);
+}
+
+.sefaz-header__user {
+  font-size: 11px;
+  text-align: right;
+}
+
+.sefaz-nav {
+  background-color: var(--sefaz-azul-medio);
+  padding: 0 20px;
+}
+
+.sefaz-nav__list {
+  display: flex;
+  list-style: none;
+  gap: 0;
+}
+
+.sefaz-nav__item {
+  position: relative;
+}
+
+.sefaz-nav__link {
+  display: block;
+  padding: 8px 16px;
+  color: var(--sefaz-branco);
+  font-size: 11px;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.sefaz-nav__link:hover {
+  background-color: var(--sefaz-azul-escuro);
+  color: var(--sefaz-branco);
+  text-decoration: none;
+}
+
+.sefaz-nav__link--active {
+  background-color: var(--sefaz-azul-escuro);
+  font-weight: bold;
+}
+
+.sefaz-content {
+  flex: 1;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.sefaz-footer {
+  background-color: var(--sefaz-azul-escuro);
+  color: var(--sefaz-cinza-claro);
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 10px;
+}
+
+/* ============ Títulos ============ */
+
+.sefaz-tr-titulo {
+  background-color: var(--sefaz-titulo-bg);
+  color: var(--sefaz-titulo-fg);
+  font-weight: bold;
+  padding: 6px 10px;
+  font-size: 12px;
+  margin-bottom: 0;
+}
+
+.sefaz-tr-subtitulo {
+  background-color: var(--sefaz-subtitulo-bg);
+  color: var(--sefaz-subtitulo-fg);
+  padding: 4px 10px;
+  font-size: 11px;
+}
+
+/* ============ Formulários ============ */
+
+.sefaz-form {
+  width: 100%;
+  max-width: 740px;
+  margin: 0 auto;
+}
+
+.sefaz-form-section {
+  margin-bottom: 16px;
+  border: 1px solid var(--sefaz-borda);
+  background: var(--sefaz-branco);
+}
+
+.sefaz-form-section__title {
+  background-color: var(--sefaz-titulo-bg);
+  color: var(--sefaz-titulo-fg);
+  font-weight: bold;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.sefaz-form-section__content {
+  padding: 10px;
+}
+
+.sefaz-form-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 6px;
+  gap: 8px;
+}
+
+.sefaz-form-row--full {
+  flex-direction: column;
+}
+
+.sefaz-td-rotulo {
+  background-color: var(--sefaz-rotulo-bg);
+  padding: 4px 8px;
+  font-weight: normal;
+  text-align: right;
+  white-space: nowrap;
+  min-width: 180px;
+  font-size: 11px;
+}
+
+.sefaz-td-rotulo-entrada {
+  background-color: var(--sefaz-rotulo-bg);
+  padding: 4px 8px;
+  font-weight: normal;
+  text-align: right;
+  white-space: nowrap;
+  min-width: 180px;
+  font-size: 11px;
+}
+
+.sefaz-td-campo {
+  padding: 4px 8px;
+  font-size: 11px;
+  flex: 1;
+}
+
+.sefaz-td-campo-saida {
+  padding: 4px 8px;
+  font-size: 11px;
+  flex: 1;
+  color: var(--sefaz-cinza-escuro);
+}
+
+/* ============ Campos de Entrada ============ */
+
+.sefaz-input-text {
+  font-family: var(--sefaz-font-family);
+  font-size: 11px;
+  padding: 3px 5px;
+  border: 1px solid var(--sefaz-borda);
+  background-color: var(--sefaz-branco);
+  color: var(--sefaz-cinza-escuro);
+  border-radius: 2px;
+}
+
+.sefaz-input-text:focus {
+  border-color: var(--sefaz-azul-medio);
+  outline: none;
+  box-shadow: 0 0 3px rgba(51, 102, 153, 0.3);
+}
+
+.sefaz-input-text--full {
+  width: 100%;
+}
+
+.sefaz-select {
+  font-family: var(--sefaz-font-family);
+  font-size: 11px;
+  padding: 3px 5px;
+  border: 1px solid var(--sefaz-borda);
+  background-color: var(--sefaz-branco);
+  color: var(--sefaz-cinza-escuro);
+  border-radius: 2px;
+}
+
+.sefaz-textarea {
+  font-family: var(--sefaz-font-family);
+  font-size: 11px;
+  padding: 3px 5px;
+  border: 1px solid var(--sefaz-borda);
+  background-color: var(--sefaz-branco);
+  color: var(--sefaz-cinza-escuro);
+  border-radius: 2px;
+  resize: vertical;
+}
+
+/* ============ Botões ============ */
+
+.sefaz-btn {
+  font-family: var(--sefaz-font-family);
+  font-size: 11px;
+  padding: 4px 16px;
+  border: 1px solid var(--sefaz-borda);
+  background: linear-gradient(to bottom, #F5F5F5, #DDDDDD);
+  color: var(--sefaz-cinza-escuro);
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.2s;
+}
+
+.sefaz-btn:hover {
+  background: linear-gradient(to bottom, #FFFFFF, #EEEEEE);
+  border-color: var(--sefaz-azul-medio);
+}
+
+.sefaz-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sefaz-btn--primary {
+  background: linear-gradient(to bottom, #336699, #003366);
+  color: var(--sefaz-branco);
+  border-color: var(--sefaz-azul-escuro);
+}
+
+.sefaz-btn--primary:hover {
+  background: linear-gradient(to bottom, #4477AA, #224477);
+}
+
+.sefaz-btn--danger {
+  background: linear-gradient(to bottom, #DD4444, #CC0000);
+  color: var(--sefaz-branco);
+  border-color: var(--sefaz-vermelho);
+}
+
+.sefaz-btn--success {
+  background: linear-gradient(to bottom, #339966, #006633);
+  color: var(--sefaz-branco);
+  border-color: var(--sefaz-verde);
+}
+
+.sefaz-btn-group {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+/* ============ Tabelas de Dados ============ */
+
+.sefaz-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  background: var(--sefaz-branco);
+}
+
+.sefaz-table th {
+  background-color: var(--sefaz-titulo-bg);
+  color: var(--sefaz-titulo-fg);
+  padding: 6px 8px;
+  text-align: left;
+  font-weight: bold;
+  border: 1px solid var(--sefaz-azul-escuro);
+}
+
+.sefaz-table td {
+  padding: 4px 8px;
+  border: 1px solid var(--sefaz-borda);
+}
+
+.sefaz-table tr:nth-child(even) {
+  background-color: #F0F0F0;
+}
+
+.sefaz-table tr:hover {
+  background-color: #E0E8F0;
+}
+
+/* ============ Abas ============ */
+
+.sefaz-tabs {
+  display: flex;
+  border-bottom: 2px solid var(--sefaz-azul-escuro);
+  margin-bottom: 16px;
+}
+
+.sefaz-tab {
+  padding: 8px 20px;
+  font-size: 11px;
+  font-family: var(--sefaz-font-family);
+  background-color: #E0E0E0;
+  border: 1px solid var(--sefaz-borda);
+  border-bottom: none;
+  cursor: pointer;
+  color: var(--sefaz-cinza-escuro);
+  margin-right: 2px;
+  border-radius: 4px 4px 0 0;
+  transition: all 0.2s;
+}
+
+.sefaz-tab:hover {
+  background-color: #D0D0D0;
+}
+
+.sefaz-tab--active {
+  background-color: var(--sefaz-azul-escuro);
+  color: var(--sefaz-branco);
+  font-weight: bold;
+  border-color: var(--sefaz-azul-escuro);
+}
+
+.sefaz-tab-content {
+  padding: 0;
+}
+
+/* ============ Mensagens ============ */
+
+.sefaz-msg {
+  padding: 10px;
+  margin-bottom: 12px;
+  border: 1px solid;
+  border-radius: 3px;
+  font-size: 11px;
+}
+
+.sefaz-msg--error {
+  background-color: #FFE0E0;
+  border-color: var(--sefaz-vermelho);
+  color: var(--sefaz-vermelho);
+}
+
+.sefaz-msg--success {
+  background-color: #E0FFE0;
+  border-color: var(--sefaz-verde);
+  color: var(--sefaz-verde);
+}
+
+.sefaz-msg--warning {
+  background-color: #FFF8E0;
+  border-color: var(--sefaz-laranja);
+  color: #995500;
+}
+
+.sefaz-msg--info {
+  background-color: #E0F0FF;
+  border-color: var(--sefaz-azul-medio);
+  color: var(--sefaz-azul-escuro);
+}
+
+/* ============ Obrigatório ============ */
+
+.sefaz-required {
+  color: var(--sefaz-vermelho);
+  font-weight: bold;
+  margin-left: 2px;
+}
+
+.sefaz-required-legend {
+  color: var(--sefaz-vermelho);
+  font-weight: bold;
+  font-size: 11px;
+}
+
+/* ============ Dados do Contribuinte ============ */
+
+.sefaz-contribuinte-card {
+  border: 1px solid var(--sefaz-borda);
+  background: var(--sefaz-branco);
+  margin-bottom: 10px;
+}
+
+.sefaz-contribuinte-card__grid {
+  display: grid;
+  grid-template-columns: 180px 1fr 120px 1fr;
+  gap: 0;
+}
+
+.sefaz-contribuinte-card__grid > .sefaz-td-rotulo,
+.sefaz-contribuinte-card__grid > .sefaz-td-campo-saida {
+  padding: 4px 8px;
+  border-bottom: 1px solid #F0F0F0;
+}
+
+/* ============ Modal / Popup ============ */
+
+.sefaz-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(192, 192, 192, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.sefaz-modal {
+  background-color: var(--sefaz-branco);
+  border: 1px solid var(--sefaz-borda);
+  box-shadow: 10px 10px 10px #888888;
+  max-width: 740px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 15px;
+}
+
+.sefaz-modal__close {
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* ============ Dados de Saída ============ */
+
+.sefaz-data-grid {
+  display: grid;
+  grid-template-columns: 180px 1fr 120px 1fr;
+  gap: 0;
+  border: 1px solid var(--sefaz-borda);
+  background: var(--sefaz-branco);
+}
+
+.sefaz-data-grid > div {
+  padding: 4px 8px;
+  border-bottom: 1px solid #F0F0F0;
+  font-size: 11px;
+}
+
+/* ============ Loading ============ */
+
+.sefaz-loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--sefaz-cinza-medio);
+}
+
+.sefaz-loading__spinner {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--sefaz-cinza-claro);
+  border-top-color: var(--sefaz-azul-medio);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============ Menu Principal ============ */
+
+.sefaz-menu-section {
+  margin-bottom: 16px;
+  border: 1px solid var(--sefaz-borda);
+  background: var(--sefaz-branco);
+  max-width: 740px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.sefaz-menu-section__title {
+  background-color: var(--sefaz-titulo-bg);
+  color: var(--sefaz-titulo-fg);
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.sefaz-menu-section__items {
+  padding: 8px 16px;
+  list-style: none;
+}
+
+.sefaz-menu-section__items li {
+  margin: 6px 0;
+}
+
+.sefaz-menu-section__items li::before {
+  content: '';
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  background-color: var(--sefaz-azul-medio);
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.sefaz-menu-section__items a {
+  font-size: 11px;
+  color: var(--sefaz-link);
+}
+
+.sefaz-menu-section__items a:hover {
+  color: var(--sefaz-link-hover);
+}
+
+/* ============ Página de Inclusão de GIA ============ */
+
+.sefaz-incluir-gia {
+  max-width: 740px;
+  margin: 0 auto;
+}
+
+.sefaz-incluir-gia__section {
+  margin-bottom: 8px;
+  border: 1px solid var(--sefaz-borda);
+  background: var(--sefaz-branco);
+}
+
+.sefaz-incluir-gia__section-title {
+  background-color: var(--sefaz-titulo-bg);
+  color: var(--sefaz-titulo-fg);
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.sefaz-incluir-gia__link {
+  display: block;
+  text-align: center;
+  padding: 8px;
+  font-size: 11px;
+}
+
+/* ============ Responsivo ============ */
+
+@media (max-width: 768px) {
+  .sefaz-data-grid,
+  .sefaz-contribuinte-card__grid {
+    grid-template-columns: 140px 1fr;
+  }
+
+  .sefaz-form-row {
+    flex-direction: column;
+  }
+
+  .sefaz-td-rotulo,
+  .sefaz-td-rotulo-entrada {
+    text-align: left;
+    min-width: auto;
+  }
+
+  .sefaz-nav__list {
+    flex-wrap: wrap;
+  }
+
+  .sefaz-tabs {
+    flex-wrap: wrap;
+  }
+}
